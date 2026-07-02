@@ -69,7 +69,7 @@ Si encaja en ambos lados, priorizar el repo de producto (menos acoplamiento en e
 
 **Rutas:**
 
-- Común → `ai-dev-toolkit/.cursor/rules/`
+- Común → `phd-agents-toolkit/.cursor/rules/`
 - Solo un producto → `<repo>/.cursor/rules/`
 
 ---
