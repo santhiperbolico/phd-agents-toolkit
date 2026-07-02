@@ -1,0 +1,41 @@
+---
+description: Type hints Python 3.11 — APIs públicas, colecciones, coherencia con el repo
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Typing
+
+## Cuándo anotar
+
+- **Sí:** firmas públicas (módulos exportados, clients, factories, builders, hooks Airflow expuestos).
+- **Opcional:** helpers privados de una línea si el repo no los anota.
+- Código nuevo en módulos ya tipados: mantener el mismo nivel de detalle.
+- **No tipar variables dentro de métodos o funciones** salvo que aporte claridad;
+  la inferencia cubre el cuerpo (p. ej. `result = client.fetch()`).
+
+## Estilo 3.11
+
+- En código **nuevo**, preferir `list[int]`, `dict[str, Any]`, `X | None` si el fichero ya usa sintaxis moderna.
+- En ficheros legacy con `Optional`, `List`, `Dict`: **no mezclar** estilos en el mismo módulo sin refactor acordado.
+- **Regla del Boy Scout (typing):** al tocar un módulo, si aparecen `Dict`/`List`/`Tuple` de `typing`, sustituir por `dict`/`list`/`tuple` y quitar el import; sin refactor masivo solo por tipos.
+- `from __future__ import annotations` al inicio cuando:
+  - el fichero o módulos vecinos ya lo usan;
+  - hace falta referenciar la propia clase en anotaciones (builders, dataclasses, attrs);
+  - el repo lo adopta en código nuevo del mismo paquete.
+
+## Colecciones y datos
+
+- `Mapping`, `Sequence` para parámetros de solo lectura cuando aporta claridad.
+- `pandas` / `numpy`: anotar retornos públicos (`pd.DataFrame`) si el módulo ya lo hace.
+- Evitar `Any` en **firmas públicas** salvo fronteras con APIs externas sin tipos; documentar en docstring si es inevitable.
+- `dict[str, Any]` es habitual para mappings y payloads JSON-like; `Any` en valores de dict es aceptable.
+
+## attrs / dataclasses
+
+- `@attr.s(auto_attribs=True)` o dataclasses: tipos en los atributos; coherente con el módulo **actual o vecino**.
+
+## No hacer
+
+- Anotaciones redundantes en variables locales obvias.
+- Importar solo para tipos en runtime si el repo usa `TYPE_CHECKING` — seguir patrón del fichero.

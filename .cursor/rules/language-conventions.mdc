@@ -1,0 +1,33 @@
+---
+description: Idioma del agente (castellano) vs código, docstrings y commits (inglés)
+alwaysApply: true
+---
+
+# Idioma — agente vs artefactos del repo
+
+## Respuestas del agente
+
+- **Siempre en castellano de España** (mensajes al usuario, explicaciones, resúmenes, preguntas).
+- Términos técnicos estándar en inglés cuando sea lo habitual (`commit`, `pull request`, `pytest`).
+
+## Código Python
+
+- **Identificadores, comentarios inline y docstrings: siempre en inglés.**
+- Mensajes de excepción y logs en código nuevo: **inglés**.
+- Si un módulo existente ya usa otro idioma, seguir el idioma del fichero al editarlo (regla `python-naming`).
+
+## Commits y PRs
+
+- **Mensajes de commit y descripciones de PR: siempre en inglés.**
+- Título imperativo, conciso, ≤72 caracteres, sin punto final.
+- Términos técnicos sin traducir forzadamente (`fix`, `add`, `refactor`).
+
+## Documentación en el repo
+
+- README, AGENTS.md, reglas y skills de este toolkit: **castellano** (instrucciones para humanos y agentes).
+- Ejemplos de código y mensajes de commit dentro de la documentación: **inglés**.
+
+## Evitar
+
+- Mezclar castellano e inglés en el mismo docstring o mensaje de commit.
+- Traducir nombres de variables o funciones al castellano en código nuevo.

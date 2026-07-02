@@ -1,0 +1,22 @@
+---
+description: DRY — no repetir lógica; modularizar fragmentos reutilizados
+alwaysApply: true
+---
+
+# DRY (Don't Repeat Yourself)
+
+No repitas lógica. Si usas un fragmento de código varias veces, **modularízalo**.
+
+## Aplicar
+
+- Extrae funciones, métodos o constantes compartidas cuando la misma lógica
+  aparece en más de un sitio.
+- Antes de escribir código nuevo, busca utilidades o módulos existentes en el
+  repo y reutilízalos.
+- Centraliza reglas de negocio y transformaciones duplicadas en un único lugar.
+
+## Evitar
+
+- Copiar y pegar bloques con cambios mínimos entre ficheros.
+- Crear helpers de una línea que no aporten reutilización real (ver también
+  regla `yagni`).

@@ -1,0 +1,49 @@
+---
+description: Estructura de directorios y paquetes Python en repos de investigación
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Estructura de repos Python
+
+## Layout habitual
+
+Los repos de doctorado pueden usar distintos layouts. **El repo manda** — seguir la estructura existente antes de imponer convenciones.
+
+### Layout con `src/` (recomendado para paquetes)
+
+```
+repo/
+├── README.md
+├── pyproject.toml          # o en src/
+├── .github/workflows/      # CI opcional
+└── src/
+    ├── package_name/
+    ├── tests/              # o tests/ en raíz
+    ├── pyproject.toml
+    ├── .flake8
+    └── .pre-commit-config.yaml
+```
+
+### Layout plano (notebooks y scripts de investigación)
+
+```
+repo/
+├── README.md
+├── notebooks/
+├── scripts/
+├── data/                   # a menudo en .gitignore si es pesado
+└── tests/
+```
+
+## Reglas generales
+
+- Código reutilizable en módulos/paquetes; notebooks para exploración.
+- Config de **formato, lint y pre-commit** en `pyproject.toml`, `.flake8` y `.pre-commit-config.yaml` (raíz o `src/` según el repo).
+- Tests junto al código (`tests/` en raíz o bajo `src/`) según convención del repo.
+- Datos grandes, modelos entrenados y artefactos: **`.gitignore`**, no versionar salvo que sean pequeños y necesarios.
+
+## Evitar
+
+- Mezclar layouts sin motivo (p. ej. tests dispersos en varias carpetas).
+- Versionar `.venv/`, `__pycache__/`, cachés de Jupyter, datasets pesados.

@@ -1,0 +1,61 @@
+---
+description: Permiso explícito para commit/push, ramas protegidas, .gitignore y convenciones Git (PhD)
+alwaysApply: false
+---
+
+# Git — proyectos de doctorado
+
+## Ramas protegidas (prohibición absoluta)
+
+**Nunca** ejecutar `git commit`, `git commit --amend` ni `git push` (ni `push --force`) sobre **`main`** o **`master`**, estando esa rama checked out o como destino del push — **aunque el usuario lo pida de forma explícita**.
+
+Si lo piden:
+
+1. **Rechazar** la operación y explicar la política.
+2. Proponer crear o usar una rama de trabajo (`feature/...` o nombre descriptivo) y commit/push ahí.
+3. El merge a `main`/`master` es vía PR; el agente **nunca** ejecuta ese merge ni push a ramas protegidas.
+
+Comprobar rama actual antes de commit o push: `git branch --show-current`.
+
+## Permiso obligatorio: commit y push
+
+- **No ejecutar** `git commit`, `git commit --amend`, `git rebase` con paso que finalice en commit automático, ni equivalentes, **salvo que el usuario lo pida de forma explícita** en el mismo hilo.
+- **No ejecutar** `git push`, `git push --force`, `git push --force-with-lease`, ni subida de ramas/tags al remoto, **salvo permiso explícito del usuario** en el mismo hilo.
+
+### Qué sí se puede hacer sin pedir permiso extra
+
+- `git status`, `git diff`, `git log`, `git fetch`, `git show`, ramas locales, ediciones, tests, linters.
+- **`git add` / staging:** solo si el usuario lo pidió o la tarea incluyó «prepara el commit» explícitamente.
+
+### Cuando el trabajo está listo
+
+1. Resumir qué cambió y sugerir mensaje de commit **en inglés** si aplica.
+2. **Preguntar** si deben hacerse commit y/o push.
+3. Esperar confirmación antes de hacer commit y/o push.
+
+## Ramas
+
+- Prefijo opcional `feature/`, `fix/`, `docs/` + slug descriptivo en kebab-case.
+- Sin prefijo: nombres descriptivos en minúsculas o kebab-case (`electoral-analysis`, `gaia-pipeline`).
+- Creación paso a paso → skill `git-workflow`.
+
+| Rama | Commit (ejemplo) |
+| --- | --- |
+| `feature/electoral-simulation` | `Add Monte Carlo simulation for seat allocation` |
+| `fix/gaia-query-timeout` | `Fix timeout when querying large Gaia catalogs` |
+| `docs/research-plan` | `Update methodology section in research plan` |
+
+## Mensaje de commit
+
+- **Idioma: inglés** (ver regla `language-conventions`).
+- **Título:** Imperativo, conciso, ≤72 caracteres, sin punto final.
+- **Cuerpo (opcional):** Explica qué y por qué; el diff cubre el cómo.
+
+## Antes de ejecutar commit
+
+- **Rama:** no estar en `main` ni `master` (ver ramas protegidas).
+- Revisar `git status` y `git diff --staged`.
+- **`.gitignore`:** si hay ficheros nuevos sin seguimiento que deban ignorarse (venv, cachés, `.env`, artefactos de build, IDE, cobertura HTML, datos pesados, etc.), **actualizar `.gitignore` antes del stage** y no añadirlos al commit. Detalle operativo → skill `git-workflow`.
+- No incluir secretos ni credenciales (ver regla `secrets-and-safety`).
+- Commits atómicos: un cambio lógico por commit.
+- Ejecutar pre-commit o linters del repo si aplica.

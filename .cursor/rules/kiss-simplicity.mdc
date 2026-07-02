@@ -1,0 +1,20 @@
+---
+description: KISS — priorizar simplicidad en el código
+alwaysApply: true
+---
+
+# KISS (Keep It Simple, Stupid)
+
+Prioriza la **simplicidad** en tu código.
+
+## Aplicar
+
+- Escribe la solución más directa que cumpla el requisito.
+- Reduce anidamiento, ramas y niveles de indirección al mínimo necesario.
+- Divide problemas complejos en pasos pequeños y comprensibles.
+
+## Evitar
+
+- Código «inteligente» que obligue a releer varias veces para entenderlo.
+- Abstracciones prematuras, metaprogramación innecesaria o APIs con demasiadas
+  opciones sin uso real.

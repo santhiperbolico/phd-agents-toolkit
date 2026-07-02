@@ -1,0 +1,23 @@
+---
+description: Principio de Knuth — evitar optimización prematura en código no crítico
+alwaysApply: true
+---
+
+# Principio de Knuth (optimización prematura)
+
+La mejora de rendimiento en partes **no críticas** del código suele generar
+complejidad y código inmanejable innecesariamente.
+
+## Aplicar
+
+- Optimiza solo cuando haya evidencia de cuello de botella (medición, perfil,
+  requisito explícito de rendimiento).
+- Prioriza claridad y corrección antes que micro-optimizaciones.
+- No introduzcas cachés, paralelismo, estructuras exóticas ni algoritmos
+  complejos sin justificación medida.
+
+## Evitar
+
+- Refactorizar por rendimiento sin datos.
+- Sacrificar legibilidad o mantenibilidad en rutas que no impactan al usuario
+  ni al SLA del sistema.

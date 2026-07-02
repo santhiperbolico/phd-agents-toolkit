@@ -1,0 +1,21 @@
+---
+description: YAGNI — no añadir funcionalidad hasta que sea realmente necesaria
+alwaysApply: true
+---
+
+# YAGNI (You Aren't Gonna Need It)
+
+No agregues funcionalidades hasta que **realmente** sean necesarias.
+
+## Aplicar
+
+- Implementa solo lo que pide el ticket, la spec o el caso de uso actual.
+- Deja extensiones futuras para cuando exista un requisito concreto, no una
+  suposición.
+- Mantén interfaces y APIs acotadas al uso presente.
+
+## Evitar
+
+- Parámetros, flags, hooks o capas de configuración «por si el día de mañana…».
+- Generalizar código con un solo consumidor o un solo caso de uso.
+- Construir infraestructura antes de validar que el flujo básico funciona.

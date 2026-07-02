@@ -1,0 +1,23 @@
+---
+description: Principio de Ockham — la solución más sencilla suele ser la correcta
+alwaysApply: true
+---
+
+# Principio de Ockham
+
+Entre varias explicaciones o soluciones válidas, prioriza la **más sencilla**
+que resuelva el problema.
+
+## Aplicar
+
+- Elige el diseño con menos piezas, dependencias y ramas condicionales.
+- Prefiere composición directa frente a capas o abstracciones que no aporten
+  valor hoy.
+- Si dos enfoques son equivalentes, implementa el que sea más fácil de leer,
+  probar y mantener.
+
+## Evitar
+
+- Añadir complejidad «por si acaso» o por elegancia teórica.
+- Resolver con frameworks, patrones o infraestructura cuando una función o
+  módulo pequeño basta.

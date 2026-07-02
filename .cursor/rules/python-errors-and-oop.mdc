@@ -1,0 +1,51 @@
+---
+description: >-
+  Excepciones de dominio, principios de diseño pragmáticos (SOLID, KISS, YAGNI,
+  DRY, SoC, LoD, Boy Scout, fail fast), complejidad flake8 y cambios acotados
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Errores y buenas prácticas de diseño
+
+## Excepciones
+
+- Errores de negocio previsibles: **clases de excepción propias** en el módulo (`EmptyCatalogError`, `InvalidBallotError`), no `Exception` genérico.
+- Heredar de `Exception` o de una base del dominio del repo; mensajes claros **en inglés** en código nuevo (ver regla `language-conventions`).
+- No capturar `Exception` amplio salvo en límites (logging, reintento); re-lanzar o envolver con contexto.
+- **Fail fast:** validar entradas al inicio y fallar pronto con excepciones de dominio claras, no propagar estados inválidos.
+
+## Buenas prácticas de diseño
+
+Intentar respetar, cuando encajen en el cambio:
+
+- **SOLID**: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion.
+- **KISS**, **YAGNI**, **DRY**.
+- **Composición sobre herencia.**
+- **Regla del Boy Scout:** dejar el código un poco más claro que como estaba, sin refactor desproporcionado.
+- **Ley de Demeter (LoD):** evitar cadenas `a.b().c().d()`; preferir colaboradores directos.
+
+**Sin aplicarlos de forma estricta** si eso obliga a refactor masivo, complica el
+código existente o rompe convenciones ya establecidas en el repo.
+
+**Prioridad de referencia** (en este orden):
+
+1. Módulos y ficheros del repo con **responsabilidad similar** al encargo.
+2. **Estructura y patrones** ya usados en ese paquete o servicio.
+3. Principios generales solo en la medida en que mejoren el cambio concreto sin
+   desalinearlo del resto del código.
+
+No imponer abstracciones, interfaces o capas extra «por principio» si el vecino
+del repo resuelve lo mismo de forma más simple y coherente con el historial del
+proyecto.
+
+## Complejidad
+
+- Respetar `max_complexity` de `.flake8` del repo (típicamente 10–15 en proyectos de investigación).
+- Si flake8 **`C901`** falla (función demasiado compleja ciclomáticamente):
+  extraer lógica a funciones o clases auxiliares; no silenciar con `# noqa`.
+
+## Cambios acotados
+
+- Extender clases existentes antes de duplicar clients.
+- No introducir frameworks nuevos sin alineación con el repo y sin permiso.

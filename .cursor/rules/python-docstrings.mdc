@@ -1,0 +1,63 @@
+---
+description: Docstrings estilo NumPy en API pública Python; idioma inglés; no duplicar type hints
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Docstrings
+
+## Estilo
+
+- **API pública** (módulos, clases y funciones exportadas): estilo **NumPy** con secciones `Parameters`, `Returns`, `Raises` cuando aporten valor.
+- **Funciones obvias** de una línea: docstring breve de una frase o omitir si el nombre y los hints son claros.
+- **Idioma: siempre inglés** (ver regla `language-conventions`).
+
+## Ejemplo NumPy
+
+```python
+def process_batch(ids: list[int], limit: int) -> int:
+    """
+    Process a batch of identifiers with a size cap.
+
+    Parameters
+    ----------
+    ids : list[int]
+        Identifiers to process.
+    limit : int
+        Maximum number of elements per run.
+
+    Returns
+    -------
+    int
+        Number of elements processed successfully.
+
+    Raises
+    ------
+    ValueError
+        If limit is less than or equal to zero.
+    """
+```
+
+## Evitar
+
+- Repetir en la docstring tipos ya cubiertos por type hints.
+- Docstrings vacíos o «TODO» en código mergeable.
+- Comentarios que narren lo obvio línea a línea.
+- Docstrings en castellano en código nuevo.
+
+## Cumplimiento
+
+Esta regla es una **convención del proyecto**, no un check automático del repo.
+
+Pre-commit y CI ejecutan flake8 (`E`, `W`, `F`, `C`: estilo, errores y
+complejidad). **No validan docstrings**: no hay pydocstyle ni flake8-docstrings
+(`D…`) en `.flake8` ni en pre-commit salvo que el repo lo configure.
+
+**Quién debe hacerlas cumplir:**
+
+- **Quien escribe el código** (o el agente) al implementar API pública.
+- **Quien revisa el PR** si la documentación queda insuficiente.
+
+Prioridad práctica: docstrings claros en **API pública**; no hace falta
+documentar cada helper interno si el nombre y los type hints ya explican el
+comportamiento.

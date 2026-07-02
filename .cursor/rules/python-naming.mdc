@@ -1,0 +1,37 @@
+---
+description: Convenciones de nombres Python — módulos, clases, funciones, tests (idioma inglés)
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Nombres Python
+
+## Módulos y paquetes
+
+- **snake_case:** `gaia_client.py`, `electoral_simulator.py`, `data_loaders/`.
+- Un concepto principal por fichero; evitar `utils.py` genérico salvo que el repo ya lo use así.
+- **Idioma: inglés** para nombres nuevos (ver regla `language-conventions`).
+
+## Clases
+
+- **PascalCase:** `GaiaCatalogClient`, `ElectoralSimulator`, `TransformationStrategy`.
+- Sufijos habituales: `*Client`, `*Builder`, `*Factory`, `*Strategy`, `*Exception` / errores de dominio como excepciones propias (`EmptyCatalogError`).
+
+## Funciones y variables
+
+- **snake_case:** `get_star_catalog`, `simulate_election`, `process_batch`.
+- Privado/interno: prefijo `_` (`_parse_response`).
+- Constantes de módulo: **MAYÚSCULAS** (`MAX_BATCH_SIZE`), en el módulo donde se usan, justo **después de los imports**.
+
+## Tests
+
+- Ficheros: `test_<module_or_feature>.py` (preferido) o `*_test.py` si el repo ya lo usa.
+- Funciones: `test_<what>_<condition>_<result>` — p. ej. `test_simulator_returns_expected_seats`.
+- Nombres de tests, docstrings y comentarios en tests: **inglés**.
+- Fixtures compartidas: `conftest.py`; si solo las usa un fichero, definirlas **en ese fichero**.
+
+## Evitar
+
+- Abreviaturas opacas (`proc`, `tmp`) salvo dominio establecido.
+- Mezclar castellano e inglés en el mismo módulo sin seguir el idioma del fichero existente.
+- Nombres en castellano en código nuevo.

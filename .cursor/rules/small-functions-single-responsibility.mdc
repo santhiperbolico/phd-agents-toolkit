@@ -1,0 +1,28 @@
+---
+description: Funciones pequeñas — una sola responsabilidad por función o método
+alwaysApply: true
+---
+
+# Funciones pequeñas
+
+Cada función o método debe hacer **una sola cosa** y hacerla bien.
+
+## Aplicar
+
+- Una responsabilidad clara por función: validar, transformar, persistir o
+  orquestar — no todo a la vez.
+- Si una función mezcla niveles de abstracción o supera la complejidad del
+  repo, extráela en pasos con nombres expresivos.
+- Los tests y la reutilización mejoran cuando cada unidad tiene un propósito
+  acotado.
+
+## Evitar
+
+- Funciones largas con múltiples bloques `if`/`for` sin estructura.
+- Métodos que lean entradas, aplican reglas de negocio, formatean salida y
+  escriben en disco en el mismo cuerpo.
+
+## Límites prácticos
+
+- En Python del equipo, respetar también `max_complexity` de flake8 del repo;
+  refactorizar antes de silenciar avisos.

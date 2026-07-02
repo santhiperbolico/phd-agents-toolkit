@@ -1,0 +1,40 @@
+---
+description: Estilo Python — Black 99, isort, flake8, py311 (proyectos PhD)
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Estilo Python
+
+## Formato
+
+- **Black:** `line-length = 99`, `target-version = py311`.
+- **isort:** `profile = black`, `line_length = 99`.
+- Ejecutar desde **`src/`** del repo: `pre-commit run --all-files` (toma
+  `pyproject.toml` del directorio actual). Skill `pre-commit-and-lint` para
+  el detalle.
+
+## Lint (flake8)
+
+- `select = E, W, F, C`; `ignore = W503, E203`.
+- `max_line_length = 99`.
+- **`max_complexity`:** leer `src/.flake8` del repo (suele ser 15–22).
+- **No usar `# noqa`** para silenciar avisos de flake8 (p. ej. `C901`, `F401`, `E501`) y hacer pasar pre-commit o CI. Corregir la causa: refactor, quitar imports, reformatear, etc. Solo mantener `# noqa` si ya existía en el fichero o el usuario lo pide explícitamente con justificación.
+
+## Imports
+
+- Orden según isort del repo (`known_first_party` para `t2o_*`, `known_local_folder` para el paquete local).
+- No mezclar imports no usados; el hook de isort/flake8 del repo debe pasar.
+
+## Tipos y docstrings
+
+- Ver reglas `python-typing` y `python-docstrings`.
+
+## Cambios mínimos
+
+- No reformatear ficheros ajenos al encargo, salvo imperativa necesidad.
+- Respetar convenciones del archivo (nombres, patrones existentes).
+
+## Verificación
+
+- Skill `pre-commit-and-lint` antes de cerrar tareas que toquen Python.

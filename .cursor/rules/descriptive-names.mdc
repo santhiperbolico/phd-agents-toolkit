@@ -1,0 +1,26 @@
+---
+description: Nombres descriptivos — variables, clases y funciones deben explicar su propósito
+alwaysApply: true
+---
+
+# Nombres descriptivos
+
+El nombre de variables, clases y funciones debe **explicar su propósito** sin
+necesidad de comentarios adicionales.
+
+## Aplicar
+
+- Usa sustantivos claros para datos y objetos (`usuario_activo`,
+  `presupuesto_mensual`).
+- Usa verbos o frases verbales para acciones (`calcular_roi`, `validar_entrada`).
+- Prefiere nombres explícitos a abreviaturas opacas (`idx`, `tmp`, `data`).
+
+## Evitar
+
+- Nombres genéricos que no aportan contexto (`handler`, `process`, `item`).
+- Nombres que ocultan efectos secundarios o el tipo de dato relevante.
+
+## Convenciones por lenguaje
+
+- En Python del equipo, combinar con la regla `python-naming` (snake_case,
+  PascalCase, convenciones de tests, etc.).
