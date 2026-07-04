@@ -62,6 +62,7 @@ Cada skill vive en su carpeta con un `SKILL.md`. Cursor las activa bajo demanda 
 - **Calidad:** pre-commit, linters, pytest y cobertura.
 - **Entorno:** venv y dependencias.
 - **Flujo de trabajo:** Git, SDD/TDD, code review.
+- **Cluster:** Slurm para scripts Python pesados (`slurm-python-jobs`).
 - **Mantenimiento del toolkit:** crear o editar reglas y skills.
 
 ---
