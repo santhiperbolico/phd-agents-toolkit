@@ -58,7 +58,7 @@ Si no aparecen reglas nuevas: **Developer: Reload Window** en Cursor.
 
 ## Qué va aquí vs en cada repo
 
-- **Aquí:** reglas y skills reutilizables entre proyectos de doctorado.
+- **Aquí:** reglas y skills reutilizables entre proyectos de doctorado; specs SDD por issue en [`issues/`](issues/README.md).
 - **En cada repo:** contexto de la investigación — metodología, datasets, convenciones de dominio.
 
 Con el workspace multi-root, Cursor combina ambos. Para el detalle, mirar `.cursor/rules/` y `.cursor/skills/` en este repo y en el de investigación.
