@@ -2,7 +2,7 @@
 
 **Repository:** [density_field_properties](https://github.com/computationalAstroUAM/density_field_properties)  
 **Issue:** [#5](https://github.com/computationalAstroUAM/density_field_properties/issues/5)  
-**Status:** En progreso (SDD)  
+**Status:** Completado (Fases A–C)  
 **Last updated:** 2026-07-26
 
 ## Entrada
