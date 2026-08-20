@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "overleaf": {
+      "command": "~/.local/bin/overleaf-tools",
+      "args": ["mcp"],
+      "env": {
+        "PATH": "~/.local/bin:/usr/share/cursor/resources/app/resources/helpers:/usr/bin:/bin",
+        "OVERLEAF_GIT_TOKEN": "olp_replace_me",
+        "OVERLEAF_PROJECTS": "thesis:PUT_PROJECT_ID_HERE"
+      }
+    },
+    "taurus": {
+      "command": "~/.local/bin/taurus-tools",
+      "args": ["mcp"],
+      "env": {
+        "PATH": "~/.local/bin:/usr/share/cursor/resources/app/resources/helpers:/usr/bin:/bin",
+        "TAURUS_SSH_HOST": "taurus"
+      }
+    },
+    "zotero": {
+      "command": "~/.local/bin/zotero-mcp",
+      "args": [],
+      "env": {
+        "PATH": "~/.local/bin:/usr/share/cursor/resources/app/resources/helpers:/usr/bin:/bin",
+        "ZOTERO_LOCAL": "true"
+      }
+    }
+  }
+}
