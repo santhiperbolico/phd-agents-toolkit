@@ -2,7 +2,7 @@
 
 Repositorio compartido de **reglas** y **skills** para Vibecoding con Cursor en **proyectos de doctorado** (investigación, análisis de datos, simulaciones, pipelines científicos).
 
-No contiene código de investigación: centraliza convenciones Python, calidad (pre-commit), pytest, Git y flujo con agentes.
+No contiene código de investigación: centraliza convenciones Python, calidad (pre-commit), pytest, Git, flujo con agentes y servidores MCP transversales (Overleaf).
 
 ## Idioma
 
@@ -58,10 +58,24 @@ Si no aparecen reglas nuevas: **Developer: Reload Window** en Cursor.
 
 ## Qué va aquí vs en cada repo
 
-- **Aquí:** reglas y skills reutilizables entre proyectos de doctorado; documentación de librerías en [`docs/`](docs/README.md).
+- **Aquí:** reglas, skills y MCP reutilizables entre proyectos de doctorado; documentación de librerías en [`docs/`](docs/README.md).
 - **En cada repo:** contexto de la investigación — metodología, datasets, convenciones de dominio.
 
 Con el workspace multi-root, Cursor combina ambos. Para el detalle, mirar `.cursor/rules/` y `.cursor/skills/` en este repo y en el de investigación.
+
+## MCP locales (Overleaf, Taurus, Zotero)
+
+```bash
+cd ~/Documentos/Doctorado/repositorios/phd-agents-toolkit
+make install-mcp      # overleaf-tools, taurus-tools + skills en ~/.cursor/skills
+make install-zotero   # zotero-mcp + skill zotero-phd
+```
+
+Mezcla [mcp/mcp.json.example](mcp/mcp.json.example) en `~/.cursor/mcp.json` (no sustituyas el fichero).
+
+- Overleaf: [mcp/overleaf/README.md](mcp/overleaf/README.md)
+- Taurus: [mcp/taurus/README.md](mcp/taurus/README.md)
+- Zotero: [mcp/zotero/README.md](mcp/zotero/README.md)
 
 ## Contribuir
 

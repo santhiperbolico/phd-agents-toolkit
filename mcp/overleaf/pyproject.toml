@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "overleaf-mcp"
+version = "0.1.0"
+description = "MCP server that reads and writes Overleaf projects through Git"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=2.12",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit>=3.8",
+    "pytest>=8.3",
+    "pytest-cov>=5.0",
+]
+
+[project.scripts]
+overleaf-tools = "overleaf_mcp.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 99
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 99
+known_first_party = ["overleaf_mcp"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "tests"]
+testpaths = ["tests"]
+addopts = "--cov=overleaf_mcp --cov-report=term-missing"
+
+[tool.coverage.run]
+branch = true
+source = ["overleaf_mcp"]
+omit = ["*/overleaf_mcp/__main__.py"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true

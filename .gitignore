@@ -72,3 +72,8 @@ data/
 # Coverage
 .coverage
 htmlcov/
+.pytest_cache/
+*.egg-info/
+
+# Local secrets
+.env

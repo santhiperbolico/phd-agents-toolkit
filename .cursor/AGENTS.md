@@ -2,7 +2,7 @@
 
 **Propósito:** toolkit compartido de reglas y skills para Vibecoding con Cursor en **proyectos de doctorado** (investigación, análisis, simulaciones, pipelines de datos). No es un repo de producto.
 
-**Última revisión:** 2026-07-02.
+**Última revisión:** 2026-08-20.
 
 ---
 
@@ -16,9 +16,9 @@
 
 ## Qué va aquí vs en cada repo
 
-Este toolkit recoge lo **transversal** de los proyectos de doctorado: convenciones Python, calidad, Git y flujo con agentes. Lo **propio de una línea de investigación** queda en el `.cursor/` (y documentación asociada) de cada repo.
+Este toolkit recoge lo **transversal** de los proyectos de doctorado: convenciones Python, calidad, Git, flujo con agentes y servidores MCP reutilizables (Overleaf, Zotero, Taurus). Lo **propio de una línea de investigación** queda en el `.cursor/` (y documentación asociada) de cada repo.
 
-- **Aquí:** reglas y skills reutilizables, sin acoplarlas a un dominio concreto.
+- **Aquí:** reglas, skills y MCP transversales, sin acoplarlos a un dominio concreto.
 - **En cada repo:** contexto del proyecto — metodología, datasets, convenciones de dominio y reglas que solo aplican allí.
 
 Con el workspace multi-root, Cursor combina ambos: el agente ve este toolkit y, al trabajar en un repo concreto, también sus reglas y skills locales.
@@ -62,8 +62,20 @@ Cada skill vive en su carpeta con un `SKILL.md`. Cursor las activa bajo demanda 
 - **Calidad:** pre-commit, linters, pytest y cobertura.
 - **Entorno:** venv y dependencias.
 - **Flujo de trabajo:** Git, SDD/TDD, code review.
-- **Cluster:** Slurm para scripts Python pesados (`slurm-python-jobs`).
+- **Notion PhD:** tareas y espacio de trabajo (`notion-phd-tasks`).
+- **Docs locales:** README y Markdown de repos hermanos (`phd-local-docs`).
+- **Cluster:** Slurm para **enviar** scripts Python pesados (`slurm-python-jobs`).
 - **Mantenimiento del toolkit:** crear o editar reglas y skills.
+
+Las skills de **Overleaf, Taurus y Zotero** no viven en este `.cursor/skills/`:
+están en `mcp/<nombre>/skill/` y `make install-mcp` / `make install-zotero` las
+enlaza a `~/.cursor/skills/` (disponibles en cualquier workspace).
+
+## MCP
+
+Overleaf y Taurus: `make install-mcp` (CLIs en `~/.local/bin` y skills en
+`~/.cursor/skills/`). Zotero: `make install-zotero`. Configuración:
+[mcp/mcp.json.example](../mcp/mcp.json.example).
 
 ---
 

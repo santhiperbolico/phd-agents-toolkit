@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "taurus": {
+      "command": "~/.local/bin/taurus-tools",
+      "args": ["mcp"],
+      "env": {
+        "PATH": "~/.local/bin:/usr/share/cursor/resources/app/resources/helpers:/usr/bin:/bin",
+        "TAURUS_SSH_HOST": "taurus"
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "zotero": {
+      "command": "~/.local/bin/zotero-mcp",
+      "args": [],
+      "env": {
+        "PATH": "~/.local/bin:/usr/share/cursor/resources/app/resources/helpers:/usr/bin:/bin",
+        "ZOTERO_LOCAL": "true"
+      }
+    }
+  }
+}
