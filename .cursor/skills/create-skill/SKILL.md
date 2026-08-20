@@ -54,8 +54,10 @@ Si encaja en ambos lados, priorizar el repo de producto (menos acoplamiento en e
 
 **Rutas:**
 
-- Común PhD → `phd-agents-toolkit/.cursor/skills/<nombre>/`
-- Solo un repo → `<repo>/.cursor/skills/<nombre>/` o `<repo>/.agents/skills/` si el equipo usa Antigravity
+- Común PhD (código, Git, pytest, …) → `phd-agents-toolkit/.cursor/skills/<nombre>/`
+- MCP Overleaf / Taurus / Zotero → `mcp/<paquete>/skill/` (se instalan en
+  `~/.cursor/skills/` con `make install-mcp` / `make install-zotero`)
+- Solo un repo → `<repo>/.cursor/skills/<nombre>/`
 
 No crear skills en `~/.cursor/skills-cursor/` (reservado a Cursor).
 

@@ -115,6 +115,8 @@ repos como `fnl_matching_error_reduction`:
 - Tests unitarios o pre-commit → local con `pytest-and-coverage` /
   `pre-commit-and-lint`.
 - Instalación de dependencias → skill `venv-and-deps`.
+- Inspeccionar ficheros en Taurus o `squeue --me` **desde el portátil** →
+  skill `taurus-cluster` (MCP de solo lectura).
 - Varios jobs en paralelo → **prohibido** salvo instrucción explícita del
   usuario (y aun así advertir del riesgo de saturar el cluster).
 
