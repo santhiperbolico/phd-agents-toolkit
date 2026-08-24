@@ -28,6 +28,7 @@ Instalación y `mcp.json` → [README.md](../README.md).
 - **Cluster Taurus, logs remotos, `squeue --me`** → skill `taurus-cluster`.
   Enviar jobs (`sbatch`) → skill `slurm-python-jobs`.
 - **Editar LaTeX en Overleaf** → skill `overleaf-mcp`.
+- **Correo institucional UPM** → skill `upm-mail`.
 - **Tareas, todo, backlog, Notion PhD** → skill `notion-phd-tasks`.
 - **Añadir, borrar o modificar ítems** en Zotero (DOI, colecciones, tags, notas nuevas, merge de duplicados). Este flujo PhD es **solo lectura**; si el usuario pide escribir, indica que requiere modo híbrido/API y no está configurado aquí.
 - Volcar la librería entera o pegar PDFs completos sin filtrar.

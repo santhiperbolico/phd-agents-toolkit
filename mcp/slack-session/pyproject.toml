@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slack-session-mcp"
+version = "0.1.0"
+description = "Read-only MCP server for Slack workspaces via browser session tokens"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=2.12",
+]
+
+[project.optional-dependencies]
+auth = [
+    "playwright>=1.49",
+]
+dev = [
+    "pre-commit>=3.8",
+    "pytest>=8.3",
+    "pytest-cov>=5.0",
+]
+
+[project.scripts]
+slack-session-tools = "slack_session_mcp.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 99
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 99
+known_first_party = ["slack_session_mcp"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "tests"]
+testpaths = ["tests"]
+addopts = "--cov=slack_session_mcp --cov-report=term-missing"
+
+[tool.coverage.run]
+branch = true
+source = ["slack_session_mcp"]
+omit = [
+    "*/slack_session_mcp/__main__.py",
+    "*/slack_session_mcp/auth_browser.py",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true

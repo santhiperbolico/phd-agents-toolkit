@@ -20,6 +20,7 @@ description: >-
 - El `.tex` está en un repo git local del workspace: editar esos ficheros, no Overleaf.
 - Compilar PDF, gestionar la cuenta Overleaf o generar tokens.
 - El servidor MCP `overleaf` no está conectado: indicar al usuario el README de `mcp/overleaf/`.
+- Correo institucional UPM → skill `upm-mail`.
 
 ## Flujo
 
