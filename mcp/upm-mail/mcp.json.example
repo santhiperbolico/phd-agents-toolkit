@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "upm-mail": {
+      "command": "~/.local/bin/upm-mail-tools",
+      "args": ["mcp"],
+      "env": {
+        "PATH": "~/.local/bin:/usr/share/cursor/resources/app/resources/helpers:/usr/bin:/bin",
+        "UPM_MAIL_ADDRESS": "nombre.apellido@alumnos.upm.es",
+        "UPM_MAIL_PASSWORD": "replace_me"
+      }
+    }
+  }
+}
