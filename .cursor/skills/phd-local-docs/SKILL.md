@@ -54,7 +54,9 @@ contiene el repo objetivo.
 
 | Repo | Uso típico (orientativo) |
 | --- | --- |
-| `Notas-Doctorado` | Notas, apuntes, contexto transversal |
+| `phd-agents-toolkit/notes/` | Notas PhD: reuniones, análisis, reportes, planes Cursor |
+| `phd-agents-toolkit/docs/` | Specs SDD y análisis ligados a repos de producto |
+| `Notas-Doctorado` | Workspace Cursor (puede apuntar al toolkit + notas) |
 | `phd-agents-toolkit` | Reglas, skills, MCP del toolkit |
 | `fnl_matching_error_reduction` | Matching / reducción de error FNL |
 | `density_field_properties` | Propiedades del campo de densidad |
@@ -87,9 +89,10 @@ Buscar en este orden, acotando al repo si se conoce:
 
 1. `{RAIZ}/{repo}/README.md`
 2. `{RAIZ}/{repo}/docs/**/*.md`
-3. `{RAIZ}/{repo}/*.md` en la raíz del repo
-4. Si no hay repo claro: `Glob` con `**/README.md` o `**/docs/**/*.md` bajo
-   `{RAIZ}`, luego filtrar por nombre o contenido con `Grep`.
+3. `{RAIZ}/phd-agents-toolkit/notes/**/*.md` (notas personales PhD)
+4. `{RAIZ}/{repo}/*.md` en la raíz del repo
+5. Si no hay repo claro: `Glob` con `**/README.md`, `**/docs/**/*.md` o
+   `phd-agents-toolkit/notes/**/*.md` bajo `{RAIZ}`, luego filtrar con `Grep`.
 
 Sustituye `{RAIZ}` por
 `/home/santhiperbolico/Documentos/Doctorado/repositorios`.

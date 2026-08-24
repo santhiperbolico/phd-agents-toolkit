@@ -21,6 +21,7 @@ Usa el MCP `plugin-notion-workspace-notion`. Antes de crear o modificar, comprue
 
 ## Cuándo NO usar
 
+- **Eventos de calendario** (agenda, reuniones con fecha, citas) → skill `notion-phd-calendar`.
 - Contenido fuera del espacio PhD y fuera del Registro de tareas.
 - Operaciones que el usuario no haya pedido explícitamente (no crear tareas «por si acaso»).
 - Cambios masivos o borrado de páginas sin confirmación del usuario.

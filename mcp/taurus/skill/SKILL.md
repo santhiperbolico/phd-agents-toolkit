@@ -20,7 +20,7 @@ description: >-
 
 - **Enviar o cancelar jobs** (`sbatch`, `scancel`, `srun` interactivo): usar la skill `slurm-python-jobs` cuando el flujo sea lanzar pipelines con los `.slurm` del repo de producto.
 - Editar o borrar ficheros remotos (este MCP es solo lectura).
-- Zotero, Overleaf o documentación local del repo de investigación.
+- Zotero, Overleaf, correo UPM o documentación local del repo de investigación.
 - El servidor MCP `taurus` no está conectado: indicar al usuario el README de `mcp/taurus/`.
 
 ## Flujo

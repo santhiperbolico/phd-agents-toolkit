@@ -58,16 +58,16 @@ Si no aparecen reglas nuevas: **Developer: Reload Window** en Cursor.
 
 ## Qué va aquí vs en cada repo
 
-- **Aquí:** reglas, skills y MCP reutilizables entre proyectos de doctorado; documentación de librerías en [`docs/`](docs/README.md).
+- **Aquí:** reglas, skills y MCP reutilizables entre proyectos de doctorado; documentación de librerías en [`docs/`](docs/README.md); notas personales en [`notes/`](notes/README.md) (reuniones, análisis, reportes, planes Cursor).
 - **En cada repo:** contexto de la investigación — metodología, datasets, convenciones de dominio.
 
 Con el workspace multi-root, Cursor combina ambos. Para el detalle, mirar `.cursor/rules/` y `.cursor/skills/` en este repo y en el de investigación.
 
-## MCP locales (Overleaf, Taurus, Zotero)
+## MCP locales (Overleaf, Taurus, correo UPM, Slack session, Zotero)
 
 ```bash
 cd ~/Documentos/Doctorado/repositorios/phd-agents-toolkit
-make install-mcp      # overleaf-tools, taurus-tools + skills en ~/.cursor/skills
+make install-mcp      # overleaf, taurus, upm-mail, slack-session + skills en ~/.cursor/skills
 make install-zotero   # zotero-mcp + skill zotero-phd
 ```
 
@@ -75,6 +75,8 @@ Mezcla [mcp/mcp.json.example](mcp/mcp.json.example) en `~/.cursor/mcp.json` (no 
 
 - Overleaf: [mcp/overleaf/README.md](mcp/overleaf/README.md)
 - Taurus: [mcp/taurus/README.md](mcp/taurus/README.md)
+- Correo UPM: [mcp/upm-mail/README.md](mcp/upm-mail/README.md)
+- Slack session (Euclid, DESI, solo lectura): [mcp/slack-session/README.md](mcp/slack-session/README.md)
 - Zotero: [mcp/zotero/README.md](mcp/zotero/README.md)
 
 ## Contribuir
