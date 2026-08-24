@@ -17,12 +17,29 @@
         "TAURUS_SSH_HOST": "taurus"
       }
     },
+    "upm-mail": {
+      "command": "~/.local/bin/upm-mail-tools",
+      "args": ["mcp"],
+      "env": {
+        "PATH": "~/.local/bin:/usr/share/cursor/resources/app/resources/helpers:/usr/bin:/bin",
+        "UPM_MAIL_ADDRESS": "nombre.apellido@alumnos.upm.es",
+        "UPM_MAIL_PASSWORD": "replace_me"
+      }
+    },
     "zotero": {
       "command": "~/.local/bin/zotero-mcp",
       "args": [],
       "env": {
         "PATH": "~/.local/bin:/usr/share/cursor/resources/app/resources/helpers:/usr/bin:/bin",
         "ZOTERO_LOCAL": "true"
+      }
+    },
+    "slack-session": {
+      "command": "~/.local/bin/slack-session-tools",
+      "args": ["mcp"],
+      "env": {
+        "PATH": "~/.local/bin:/usr/share/cursor/resources/app/resources/helpers:/usr/bin:/bin",
+        "SLACK_WORKSPACES": "euclid:TYYYY:xoxc-euclid-token:xoxd-euclid-cookie,desi:TXXXX:xoxc-desi-token:xoxd-desi-cookie"
       }
     }
   }

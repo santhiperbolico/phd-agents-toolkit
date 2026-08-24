@@ -8,7 +8,7 @@ MCP_PATH := $(PREFIX)/bin:$(CURSOR_HELPERS):/usr/bin:/bin
 .PHONY: help install-mcp install-zotero uninstall-mcp
 
 help:
-	@echo "install-mcp     Install Overleaf/Taurus CLIs and their Cursor skills"
+	@echo "install-mcp     Install Overleaf/Taurus/UPM-mail/Slack-session CLIs and their Cursor skills"
 	@echo "install-zotero  Install zotero-mcp (PyPI) and the zotero-phd skill"
 	@echo "uninstall-mcp   Remove CLIs, skill links, and the shared venv"
 
@@ -18,18 +18,27 @@ $(VENV)/bin/python:
 
 install-mcp: $(VENV)/bin/python
 	mkdir -p $(PREFIX)/bin $(CURSOR_SKILLS)
-	$(VENV)/bin/pip install -e $(CURDIR)/mcp/overleaf -e $(CURDIR)/mcp/taurus
+	$(VENV)/bin/pip install -e $(CURDIR)/mcp/overleaf -e $(CURDIR)/mcp/taurus -e $(CURDIR)/mcp/upm-mail -e "$(CURDIR)/mcp/slack-session[auth]"
 	ln -sfn $(VENV)/bin/overleaf-tools $(PREFIX)/bin/overleaf-tools
 	ln -sfn $(VENV)/bin/taurus-tools $(PREFIX)/bin/taurus-tools
+	ln -sfn $(VENV)/bin/upm-mail-tools $(PREFIX)/bin/upm-mail-tools
+	ln -sfn $(VENV)/bin/slack-session-tools $(PREFIX)/bin/slack-session-tools
 	ln -sfn $(CURDIR)/mcp/overleaf/skill $(CURSOR_SKILLS)/overleaf-mcp
 	ln -sfn $(CURDIR)/mcp/taurus/skill $(CURSOR_SKILLS)/taurus-cluster
+	ln -sfn $(CURDIR)/mcp/upm-mail/skill $(CURSOR_SKILLS)/upm-mail
+	ln -sfn $(CURDIR)/mcp/slack-session/skill $(CURSOR_SKILLS)/slack-session
 	@echo
 	@echo "Installed:"
 	@echo "  $(PREFIX)/bin/overleaf-tools"
 	@echo "  $(PREFIX)/bin/taurus-tools"
+	@echo "  $(PREFIX)/bin/upm-mail-tools"
+	@echo "  $(PREFIX)/bin/slack-session-tools"
 	@echo "  $(CURSOR_SKILLS)/overleaf-mcp"
 	@echo "  $(CURSOR_SKILLS)/taurus-cluster"
+	@echo "  $(CURSOR_SKILLS)/upm-mail"
+	@echo "  $(CURSOR_SKILLS)/slack-session"
 	@echo
+	@echo "Slack session auth (once): $(VENV)/bin/playwright install chromium"
 	@echo "Merge mcp/mcp.json.example into ~/.cursor/mcp.json then reload Cursor."
 	@echo "If Cursor does not expand ~, replace it with $(HOME)."
 	@echo "Suggested PATH for mcp.json: $(MCP_PATH)"
@@ -46,6 +55,6 @@ install-zotero: $(VENV)/bin/python
 	@echo "Merge mcp/zotero/mcp.json.example into ~/.cursor/mcp.json then reload Cursor."
 
 uninstall-mcp:
-	rm -f $(PREFIX)/bin/overleaf-tools $(PREFIX)/bin/taurus-tools $(PREFIX)/bin/zotero-mcp
-	rm -f $(CURSOR_SKILLS)/overleaf-mcp $(CURSOR_SKILLS)/taurus-cluster $(CURSOR_SKILLS)/zotero-phd
+	rm -f $(PREFIX)/bin/overleaf-tools $(PREFIX)/bin/taurus-tools $(PREFIX)/bin/upm-mail-tools $(PREFIX)/bin/slack-session-tools $(PREFIX)/bin/zotero-mcp
+	rm -f $(CURSOR_SKILLS)/overleaf-mcp $(CURSOR_SKILLS)/taurus-cluster $(CURSOR_SKILLS)/upm-mail $(CURSOR_SKILLS)/slack-session $(CURSOR_SKILLS)/zotero-phd
 	rm -rf $(PREFIX)/share/phd-agents-mcp
