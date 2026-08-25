@@ -1,7 +1,7 @@
 # Spec: Griffin+19 en `get_Lagn` y luminosidad bolométrica instantánea
 
-**Repository:** [get_nebular_emission](https://github.com/computationalAstroUAM/get_nebular_emission)  
-**Issue:** _(pendiente de enlazar)_  
+**Repository:** [get_nebular_emission](https://github.com/galform/get_nebular_emission)  
+**Issue:** [galform/get_nebular_emission#37](https://github.com/galform/get_nebular_emission/issues/37)  
 **Status:** En planificación  
 **Last updated:** 2026-07-30
 

@@ -107,6 +107,7 @@ La propia página PhD tiene `ancestor-path` vacío; también es válida.
 | Tipo | Formato en `properties` |
 | --- | --- |
 | date (Plazo) | `date:Plazo:start`, `date:Plazo:is_datetime` (0 o 1) |
+| url (Jira Task, GitHub Issue) | URL completa de la issue |
 | checkbox | `__YES__` / `__NO__` |
 | person (Responsable) | JSON array de user IDs |
 

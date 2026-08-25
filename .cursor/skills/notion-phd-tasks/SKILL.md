@@ -120,6 +120,7 @@ Valores por defecto razonables si el usuario no indica lo contrario:
 | Prioridad | select | `Alta`, `Medio`, `Baja` |
 | Responsable | person | IDs de usuario vía `notion-get-users` |
 | Jira Task | url | |
+| GitHub Issue | url | Enlace a issue de GitHub (p. ej. `galform/get_nebular_emission#37`) |
 
 Detalle de propiedades, SQL de ejemplo y convenciones MCP → [reference.md](reference.md).
 
