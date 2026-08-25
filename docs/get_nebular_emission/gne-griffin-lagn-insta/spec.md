@@ -2,8 +2,11 @@
 
 **Repository:** [get_nebular_emission](https://github.com/galform/get_nebular_emission)  
 **Issue:** [galform/get_nebular_emission#37](https://github.com/galform/get_nebular_emission/issues/37)  
-**Status:** En planificación  
-**Last updated:** 2026-07-30
+**Status:** En implementación  
+**Last updated:** 2026-08-25
+
+Documentación del método Griffin elegido frente al alternativo:
+[griffin-lbol-methods.md](./griffin-lbol-methods.md).
 
 ## Resumen
 
@@ -51,7 +54,7 @@ flowchart TD
 | --- | --- | --- |
 | `Lagn_inputs` | `str` | `Lagn`, `Hirschmann+14` o `Griffin+19` |
 | `Lagn_params` | `list` | Columnas/rutas según modo (tabla anterior) |
-| `Lagn_insta` | `bool` | `True`: `Lagn` devuelto es el que usa GNE. `False`: calcular versión instantánea y guardar también `Lagn_noinsta` |
+| `Lagn_insta` | `bool` | `True`: GNE usa luminosidad de ventana/catálogo (`Lagn_noinsta`). `False`: calcular luminosidad instantánea para líneas y conservar `Lagn_noinsta` en HDF5 |
 | `Lagn_insta_params` | `list` | Parámetros para el cálculo instantáneo genérico (`r_bulge`, `v_bulge`, …) o delegación a Griffin |
 | `redshift_previous` | `float` | Redshift del snapshot anterior (ventana temporal BOOL / duty cycle) |
 | `tau_fold` | `float` | Factor de plegado para `t_Q` (Griffin) |
