@@ -67,16 +67,37 @@ Determinar:
 | Dato | Cómo obtenerlo |
 | --- | --- |
 | Rama actual | `git branch --show-current` |
-| Rama base (destino PR) | `main` o `master` — ver `git-workflow` |
-| Issue GitHub | Número en rama (`feature/42-haloscope`), commit o contexto del hilo |
-| Owner / repo | `git remote -v` → `github.com/{owner}/{repo}.git` |
+| Rama base (destino PR) | `main` o `master` del **fork** (`origin`) — ver abajo |
+| Remoto del fork | `origin` → `github.com/{tu_usuario}/{repo}.git` |
+| Remoto upstream (si existe) | `upstream` → repo principal; **no** usar como base de la PR salvo petición explícita |
+| Issue GitHub | Número en rama, commit o contexto del hilo |
+| Owner / repo (para PR) | Siempre desde **`origin`**, no desde `upstream` |
+
+**Repos con fork:** la PR va de la rama de trabajo → `main` (o `master`) del
+**fork** (`origin`). El merge a `upstream/main` es un paso posterior (otra PR
+cross-repo o sincronización manual), no el destino por defecto.
+
+Detectar fork:
+
+```bash
+git remote -v
+# origin    git@github.com:santhiperbolico/get_nebular_emission.git
+# upstream  git@github.com:galform/get_nebular_emission.git
+```
+
+Si existe `upstream`, calcular el diff y abrir la PR respecto a **`origin/${BASE}`**,
+no `upstream/${BASE}`.
+
+**Issues en el repo upstream:** referenciar como `galform/repo#37` en la
+descripción. Usar `Closes #N` solo si el issue vive en el **mismo repo** que la
+PR (`origin`).
 
 Comprobar que la rama **no** es `main` ni `master`.
 
 Calcular tamaño del diff respecto a la base:
 
 ```bash
-BASE=main   # sustituir por main o master según el repo
+BASE=main   # main o master del fork (origin), no upstream
 git fetch origin
 git diff --numstat "origin/${BASE}...HEAD" | awk '{s+=$1+$2} END {print s+0}'
 ```
@@ -205,10 +226,12 @@ Incluir en **References** (si aplica):
 git push -u origin "$(git branch --show-current)"
 ```
 
-**Crear PR** en GitHub (preferir `gh`; alternativa MCP):
+**Crear PR** en GitHub (preferir `gh`; alternativa MCP). **Owner/repo = fork
+(`origin`)**, base = `main` del fork:
 
 ```bash
 gh pr create \
+  --repo "$(git remote get-url origin | sed -E 's#.*github.com[:/]([^/]+/[^/.]+).*#\1#')" \
   --base main \
   --head "$(git branch --show-current)" \
   --title "Add haloscope scan pipeline" \
@@ -218,6 +241,9 @@ gh pr create \
 EOF
 )"
 ```
+
+Si `gh` no está instalado, usar MCP `user-github` → `create_pull_request` con
+`owner` y `repo` del **fork** (`origin`).
 
 Detalle de `gh` y MCP en [patterns.md](patterns.md#create-pr-on-github).
 
@@ -252,6 +278,7 @@ Tras crear la PR, devolver al usuario:
 | Pytest | `pytest-and-coverage` |
 | Docs en repos hermanos | `phd-local-docs` |
 | Contexto issue GitHub | MCP `user-github` → `issue_read` |
+| Redactar issue nueva | `create-github-issue` |
 | Crear PR GitHub | `gh pr create` o MCP `create_pull_request` |
 | Tarea Notion (opcional) | `notion-phd-tasks` |
 
@@ -269,7 +296,7 @@ Tras crear la PR, devolver al usuario:
 
 ## Checklist
 
-- [ ] Rama válida (no `main`/`master`) y base `main` o `master`
+- [ ] Rama válida (no `main`/`master`) y base = `main`/`master` del **fork** (`origin`)
 - [ ] Tamaño del diff calculado
 - [ ] Code review ejecutado y resuelto si diff > 100
 - [ ] Pre-commit en verde en ficheros del diff (si aplica)

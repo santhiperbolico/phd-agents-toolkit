@@ -56,22 +56,49 @@ Add `Closes #42` at the top or bottom when the PR should auto-close the issue.
 
 ## Create PR on GitHub
 
+### Fork workflow (default for PhD repos)
+
+Many research repos use a personal fork:
+
+| Remote | Role | Use in PR |
+| --- | --- | --- |
+| `origin` | Your fork | **base repo**, push target, PR destination |
+| `upstream` | Canonical repo | Sync only; **not** the default PR base |
+
+```bash
+git remote -v
+# origin    https://github.com/santhiperbolico/get_nebular_emission.git
+# upstream  https://github.com/galform/get_nebular_emission.git
+```
+
+- **Base branch:** `main` on `origin` (your fork).
+- **Head branch:** feature branch on `origin` (already pushed).
+- **MCP / `gh` owner/repo:** parse from `origin`, never `upstream`.
+- **Upstream issues:** link as `galform/get_nebular_emission#37`. Use `Closes #N`
+  only when issue `#N` exists in the **same** repo as the PR.
+
+Diff and tests always compare against `origin/main` (or `origin/master`), not
+`upstream/main`.
+
 ### `gh` CLI (preferred)
 
 After push with `-u`:
 
 ```bash
 gh pr create \
+  --repo santhiperbolico/get_nebular_emission \
   --base main \
-  --head "$(git branch --show-current)" \
-  --title "[#42] Add haloscope scan pipeline" \
+  --head feature/griffin-method-lagn \
+  --title "[galform#37] Integrate Griffin+19 and instantaneous L_bol" \
   --body "$(cat <<'EOF'
 ## Objective
 ...
-Closes #42
 EOF
 )"
 ```
+
+Replace `--repo` with the fork (`origin`). Omit `--repo` when `gh` defaults to
+the fork checkout.
 
 Use `--base master` if the repo default branch is `master`.
 
