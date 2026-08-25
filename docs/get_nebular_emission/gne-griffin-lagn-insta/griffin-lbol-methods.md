@@ -1,6 +1,8 @@
 # Griffin+19: dos métodos para combinar HH y SB
 
-**Repository:** [get_nebular_emission](https://github.com/computationalAstroUAM/get_nebular_emission)  
+**Repository:** [galform/get_nebular_emission](https://github.com/galform/get_nebular_emission)  
+**Issue:** [galform/get_nebular_emission#37](https://github.com/galform/get_nebular_emission/issues/37)  
+**PR:** [galform/get_nebular_emission#38](https://github.com/galform/get_nebular_emission/pull/38)  
 **Relacionado:** [spec.md](./spec.md)  
 **Last updated:** 2026-08-25
 
@@ -51,16 +53,16 @@ conviene comparar explícitamente si se reabre el debate.
 
 ## Flag `Lagn_insta` y salida HDF5
 
-| `Lagn_insta` | Comportamiento en `gne()` |
-| --- | --- |
-| `True` | GNE usa la luminosidad de ventana / catálogo (`Lagn_noinsta`); no se aplica muestreo BOOL genérico salvo que Griffin ya devuelva instantánea internamente. |
-| `False` | Se calcula luminosidad instantánea (`get_Lagn_insta` o rama Griffin con pesos) para líneas y `U`; se conserva `Lagn_noinsta` en HDF5. |
+Internamente `gne()` usa `calculate_Lagn_insta = not Lagn_insta`.
 
-Dataset HDF5 de la luminosidad no instantánea: `agn_data/L_agn_noinsta`.
+| `Lagn_insta` | Comportamiento en `gne()` | HDF5 |
+| --- | --- | --- |
+| `True` | GNE usa luminosidad de **ventana/catálogo** (`Lagn = Lagn_noinsta`); sin muestreo BOOL genérico | Solo `agn_data/Lagn` (no se escribe `L_agn_noinsta`, evita duplicar el mismo valor) |
+| `False` | GNE usa luminosidad **instantánea** (`get_Lagn_insta` o Griffin con pesos) | `agn_data/Lagn` (instantánea) + `agn_data/L_agn_noinsta` (ventana) |
 
 Parámetro de plegado temporal BOOL: `tau_fold` (fiducial Shark: `1.0`; si `None`, se usa `c.fq`).
 
-## Referencias en el repo
+## Referencias en el repo de producto
 
 | Pieza | Fichero |
 | --- | --- |
@@ -68,3 +70,4 @@ Parámetro de plegado temporal BOOL: `tau_fold` (fiducial Shark: `1.0`; si `None
 | Pesos BOOL, `get_Lagn_insta` | `src/gne/gne_Lagn.py` |
 | Cableado `calculate_Lagn_insta = not Lagn_insta` | `src/gne/gne.py` |
 | Escritura `L_agn_noinsta` | `src/gne/gne_io.py` |
+| Tests | `tests/test_griffin_lagn_insta.py`, `tests/test_Lagn.py` |

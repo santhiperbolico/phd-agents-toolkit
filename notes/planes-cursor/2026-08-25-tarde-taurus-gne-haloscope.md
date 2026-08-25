@@ -176,8 +176,11 @@ git -C <get_nebular_emission> status && git -C <prep_gne_input> status && git -C
 
 | Fecha | Resumen |
 | --- | --- |
-| 2026-08-25 | Plan creado desde briefing Slack/correo; implementación pendiente en Taurus. |
+| 2026-08-25 | Bloque 1 GNE: PR [#38](https://github.com/galform/get_nebular_emission/pull/38) abierta; spec actualizada en `docs/get_nebular_emission/gne-griffin-lagn-insta/`. |
 
 ## Resultado
 
-_Pendiente — completar al cerrar la sesión (enlaces PR, rutas de plots, % matching)._
+- **GNE PR:** [galform/get_nebular_emission#38](https://github.com/galform/get_nebular_emission/pull/38) (`feature/griffin-method-lagn` → `main`)
+- **Issue:** [galform/get_nebular_emission#37](https://github.com/galform/get_nebular_emission/issues/37)
+- **Docs toolkit:** `docs/get_nebular_emission/gne-griffin-lagn-insta/` (spec + `griffin-lbol-methods.md`)
+- Cortes Hα y Haloscope: pendientes (bloques 2–3 del plan)
