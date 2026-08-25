@@ -47,7 +47,8 @@ Tres bloques encadenados por dependencia de datos:
 
 - Inspección de código en Taurus, commits y PR de `get_nebular_emission`.
 - Commits en `prep_gne_input` y `run_setup` alineados con la PR.
-- Cortes Hα con datos Griffin + instantaneidad (Shark; Galform si líneas listas).
+- Cortes Hα con datos Griffin + instantaneidad (Shark en `data21/Shark/`; Galform en
+  `data21/Galform_to_copy/` vía `euclid_halpha_flux`).
 - Exploración inicial de matching FastPM↔UNIT y notas para calibración de masas.
 
 ### Fuera de alcance (esta sesión)
@@ -90,28 +91,155 @@ Estimación total: **~4 h**. Un solo job Slurm activo a la vez (regla del toolki
 
 **Tarea Notion:** [Corte Hα para Euclid en z~1](https://app.notion.com/p/Corte-Halpha-para-Euclid-en-z-1-3092070c3c2880768ea1eea96da7d8a8)
 
-**Dependencia:** líneas GNE generadas con el flujo Griffin (Bloque 1 o corridas previas en
-Taurus para snapshots ya ejecutados: 65, 74, 81, 87, 90, 96, 98, 104, 109).
+**Objetivo (Notion):** en el snapshot más cercano a z~1, encontrar el **corte de flujo Hα
+atenuado** (AGN + SFR) que reproduce la densidad numérica de la **Tabla 2 de
+Reyes-Peraza+24** ([MNRAS 529, 3877](https://ui.adsabs.harvard.edu/abs/2024MNRAS.529.3877R/abstract)),
+usando funciones acumuladas n(>F) como en
+[lo2_cum.py](https://github.com/viogp/plots4papers/blob/master/elg_cw_plots/selections/lo2_cum.py)
+(González-Pérez+20, fig. 8).
+
+**Bloque activo en Notion (§5):** recalcular cortes Euclid con **Griffin+19** y
+**luminosidad instantánea** (`Lagn_insta=False` en GNE → `agn_data/Lagn` instantánea para
+líneas; ver [griffin-lbol-methods.md](../../docs/get_nebular_emission/gne-griffin-lagn-insta/griffin-lbol-methods.md)).
+Pendiente de Notion §3: si el corte no ajusta bien → zoom en la zona interesada +
+interpolación; consultar a Miguel.
+
+**Dependencia:** `lines.hdf5` generados con GNE en rama `feature/griffin-method-lagn` (PR
+[#38](https://github.com/galform/get_nebular_emission/pull/38)) y `run_setup` configurado con
+`Lagn_inputs='Griffin+19'`, `Lagn_insta=False`, `tau_fold=1`.
+
+#### Rutas de datos en Taurus (`data21`)
+
+| SAM | Raíz en cluster | Convención de fichero |
+| --- | --- | --- |
+| Shark | `/data21/users/vgonzalez/Data/Shark/` | `{subtype}/iz{N}/ivol{i}/lines.hdf5` |
+| Galform | `/data21/users/vgonzalez/Data/Galform_to_copy/` | idem |
+
+Subtipos: `SU1`, `SU2`, `UNIT1GPC_fnl0`, `UNIT1GPC_fnl100`.
+
+**Nota `fnl100`:** `euclid_halpha_flux` lee snapshot `iz{N-1}` cuando `subtype=UNIT1GPC_fnl100`
+(ej. pedir `iz98` → lee `iz97/`).
+
+**Nota Galform:** el driver `flux_cutoff_elg.py` espera carpeta `Galform/` bajo `--data-root`.
+Opciones equivalentes:
+
+1. Symlink en Taurus: `ln -s Galform_to_copy /data21/users/vgonzalez/Data/Galform`
+2. Ampliar `SAM_TYPES` en `euclid_halpha_flux` para aceptar `Galform_to_copy`
+
+#### Disponibilidad de líneas (tabla Notion, ago 2026)
+
+| Snapshot | z | Shark | Galform | Prioridad |
+| --- | --- | --- | --- | --- |
+| 98 | 0.944 | SU1/SU2 lines; UNIT prep | SU lines; UNIT prep | **Principal z~1** |
+| 90 | 1.321 | lines en los 4 subtipos | lines en los 4 subtipos | Alta |
+| 87 | 1.480 | SU lines; UNIT prep | SU lines; UNIT prep | Alta |
+| 81 | 1.833 | mezcla prep/lines | mayoría NF | Solo Shark UNIT |
+| 78 | 2.020 | SU lines; UNIT parcial | SU lines; UNIT parcial | Baja (z>1.5) |
+
+En `data21` (ago 2026): Shark `UNIT1GPC_fnl0/iz98` tiene `lines.hdf5` recientes (Griffin);
+Galform_to_copy tiene árbol completo `iz65–iz109` con `lines.hdf5` en ivols.
+
+#### Repo y salidas del análisis
+
+| Recurso | Ruta Taurus (referencia) |
+| --- | --- |
+| Repo cortes | `/home/arnes/santiago_arranz/nebular_emission/euclid_halpha_flux` |
+| Driver principal | `scripts/flux_cutoff/flux_cutoff_elg.py` |
+| Comparación Shark↔Galform | `scripts/flux_cutoff/plot_cumulative_shark_galform_iz97.py` |
+| Slurm cortes | `slurm/run_flux_cutoff.slurm` |
+| Salida figuras/tablas | `output/plot_lfunction/{Shark|Galform}/` |
+
+El driver escribe: PNG acumulados (L y F), `halpha_density_cutoffs_{sam}_{subtype}.txt`,
+catálogos cortados y espectro de potencia por snapshot.
+
+#### Plan de ejecución (orden)
 
 | Paso | Acción | Criterio |
 | --- | --- | --- |
-| 2.1 | Verificar que existen `lines.hdf5` Griffin+insta para Shark en snapshots objetivo (mín. iz98 / z≈0.94) | Ficheros en ruta esperada por `run_setup` |
-| 2.2 | Adaptar script de cortes acumulados (referencia: [lo2_cum.py](https://github.com/viogp/plots4papers/blob/master/elg_cw_plots/selections/lo2_cum.py)) | Lee Hα atenuado AGN+SFR |
-| 2.3 | Calcular cortes de flujo para densidades Tabla 2 Reyes-Peraza en z~1 | Tabla snapshot × SAM × modelo |
-| 2.4 | Comparar Shark Griffin+insta vs Galform (mismo snapshot más cercano) | Gráfica n(>F) acumulada; anotar desplazamiento |
-| 2.5 | Si desajuste persiste: zoom en zona de interés + interpolación del corte (pendiente Notion §3) | Valor de corte documentado por celda de la tabla |
+| 2.1 | Activar venv de `euclid_halpha_flux`; confirmar symlink `Galform` o parche `Galform_to_copy` | `pytest -q` verde en repo |
+| 2.2 | Inventario rápido: para cada snapshot/subtipo objetivo, contar ivols con `lines.hdf5` (64 esperados) | Lista gaps antes de cortes |
+| 2.3 | **Si faltan líneas Griffin+insta (Shark):** actualizar `run_gne_shark.py` (`outpath` → `data21`, Griffin+19, `Lagn_insta=False`); lanzar `slurm_hdf5_run.py` solo snapshots/subtipos con gap | Job Slurm activo único; logs en `run_setup/taurus/logs/` |
+| 2.4 | **Cortes Shark Griffin+insta** con `flux_cutoff_elg.py` | Ver comandos abajo |
+| 2.5 | **Cortes Galform** (mismos snapshots; líneas existentes en `Galform_to_copy`, aún sin Griffin) | Tabla `halpha_density_cutoffs_*.txt` |
+| 2.6 | Comparar Shark vs Galform: `plot_cumulative_shark_galform_iz97.py` (adaptar snapshot si ≠ iz97) | PNG comparativos n(>F) y n(>L) |
+| 2.7 | Revisar desplazamiento (~3 mag Shark/Galform según tarea incongruencias); zoom (`--cutoff-n-bins-fine 300`, `--cutoff-zoom-bins 2`) | Corte documentado por celda Reyes-Peraza |
+| 2.8 | Si desajuste persiste: interpolación manual en zona del corte + nota para Miguel (Notion §3) | Valor de corte anotado en plan/Notion |
 
-**Snapshots prioritarios (tabla Notion):**
+**Snapshots CLI** (densidades η de Reyes-Peraza ya en `IZ_DICT` del script):
 
-| Snapshot | z | Notas |
-| --- | --- | --- |
-| 98 | 0.944 | Principal para z~1 Euclid |
-| 90 | 1.321 | Segundo redshift de la tabla |
-| 87 | 1.480 | |
-| 81 | 1.833 | Shark disponible; Galform parcial |
+- Fase 1 (z~1): `iz98` (z=0.944), opcional `iz97` (z=0.987)
+- Fase 2: `iz90`, `iz87`
+- Fase 3 (si tiempo): `iz81`, `iz78`
 
-**Entregable:** tabla de cortes + gráficas acumuladas guardadas en ruta del proyecto;
-mensaje breve a Miguel/Nicola si hay valores finales.
+**Subtipos fase 1:** `UNIT1GPC_fnl0` (fnl0, como en Notion §3); extender a SU1/SU2 y fnl100
+según tabla Notion.
+
+#### Comandos de ejecución (Taurus)
+
+```bash
+# Mutex Slurm
+squeue -u "$USER" -h -o "%i %j %T"
+
+DATA_ROOT=/data21/users/vgonzalez/Data
+REPO=/home/arnes/santiago_arranz/nebular_emission/euclid_halpha_flux
+cd "$REPO"
+source .venv/bin/activate
+export PYTHONPATH="${REPO}/src"
+export OMP_NUM_THREADS=16
+
+# Inventario (ejemplo iz98 Shark fnl0)
+for i in $(seq 0 63); do
+  f="${DATA_ROOT}/Shark/UNIT1GPC_fnl0/iz98/ivol${i}/lines.hdf5"
+  test -f "$f" || echo "missing ivol${i}"
+done
+
+# Cortes Shark — Griffin+insta, snapshot principal z~1
+python scripts/flux_cutoff/flux_cutoff_elg.py \
+  --data-root "$DATA_ROOT" \
+  --sam-type Shark \
+  --subtype UNIT1GPC_fnl0 \
+  --snapshots iz98 \
+  --output-path output/plot_lfunction/griffin_insta \
+  --save-txt
+
+# Cortes Galform (requiere symlink Galform → Galform_to_copy o sam-type extendido)
+python scripts/flux_cutoff/flux_cutoff_elg.py \
+  --data-root "$DATA_ROOT" \
+  --sam-type Galform \
+  --subtype UNIT1GPC_fnl0 \
+  --snapshots iz98 iz90 iz87 \
+  --output-path output/plot_lfunction/griffin_insta
+
+# Comparación acumulada Shark vs Galform (ajustar --data-root y snapshot)
+python scripts/flux_cutoff/plot_cumulative_shark_galform_iz97.py \
+  --data-root "$DATA_ROOT" \
+  --output-path output/plot_lfunction/griffin_insta \
+  --subtype UNIT1GPC_fnl0
+
+# Slurm (editar REPO_ROOT y snapshots en slurm/run_flux_cutoff.slurm)
+sbatch slurm/run_flux_cutoff.slurm
+```
+
+**GNE Shark Griffin (solo si 2.2 detecta gaps):**
+
+```bash
+# En run_setup/taurus — outpath en run_gne_shark.py:
+#   outpath = '/data21/users/vgonzalez/Data/Shark'
+#   Lagn_inputs = 'Griffin+19'
+#   Lagn_params = [m_bh, bh_ar_sb, bh_ar_hh, ...]  # columnas Shark
+#   Lagn_insta = False
+#   tau_fold = 1
+cd /path/to/run_setup/taurus
+python slurm_hdf5_run.py   # sam=Shark; ampliar runs con iz98, iz90, iz87
+```
+
+#### Entregables
+
+- Tabla `halpha_density_cutoffs_{Shark|Galform}_{subtype}.txt` con L y F al nivel η de
+  Reyes-Peraza.
+- PNG acumulados (luminosidad y flujo atenuado) en `output/plot_lfunction/griffin_insta/`.
+- Comparación Shark↔Galform para al menos `iz98` + `UNIT1GPC_fnl0`.
+- Mensaje breve a Miguel/Nicola si hay valores finales de corte (Notion §4 histórico).
 
 ---
 
@@ -150,6 +278,14 @@ flowchart LR
 - **Bloque 3** es independiente de GNE; avanzar si el tiempo del Bloque 2 se alarga.
 
 ## Comandos de referencia (Taurus)
+
+Raíces de datos Euclid (ago 2026):
+
+```bash
+SHARK_ROOT=/data21/users/vgonzalez/Data/Shark
+GALFORM_ROOT=/data21/users/vgonzalez/Data/Galform_to_copy
+DATA_ROOT=/data21/users/vgonzalez/Data   # Shark + symlink Galform → Galform_to_copy
+```
 
 ```bash
 # Mutex Slurm — obligatorio antes de sbatch
