@@ -20,6 +20,7 @@ Cumple siempre la regla `git-conventions` (permisos, ramas protegidas, inglés e
 ## Cuándo NO usar
 
 - Revisar PRs → skill `code-review`.
+- Crear o abrir PRs → skill `create-pull-request`.
 - Resolver conflictos de merge complejos (orientar al usuario).
 
 ---
