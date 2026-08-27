@@ -61,7 +61,7 @@ Cada skill vive en su carpeta con un `SKILL.md`. Cursor las activa bajo demanda 
 - **Código Python:** convenciones al implementar o modificar código.
 - **Calidad:** pre-commit, linters, pytest y cobertura.
 - **Entorno:** venv y dependencias.
-- **Flujo de trabajo:** Git, SDD/TDD, code review.
+- **Flujo de trabajo:** Git, crear PR (`create-pull-request`), SDD/TDD, code review.
 - **Asesor PhD:** persona Roger (`roger`) — asistente, asesor científico, programación e IMEIO.
 - **Notion PhD:** tareas (`notion-phd-tasks`), calendario de eventos (`notion-phd-calendar`) y espacio de trabajo.
 - **Docs locales:** README y Markdown de repos hermanos (`phd-local-docs`).

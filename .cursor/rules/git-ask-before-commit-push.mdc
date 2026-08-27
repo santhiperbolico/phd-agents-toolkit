@@ -1,0 +1,46 @@
+---
+description: Preguntar siempre antes de git commit o push salvo petición explícita
+alwaysApply: true
+---
+
+# Git — preguntar antes de commit/push
+
+## Regla
+
+**No ejecutes** `git commit`, `git commit --amend`, `git push` ni variantes
+(`--force`, tags, etc.) **salvo que el usuario lo pida de forma explícita**
+en el mismo mensaje (p. ej. «haz commit», «push a origin», «commit y push»).
+
+Si el trabajo está listo pero **no** pidió commit ni push:
+
+1. Resume los cambios y propón un mensaje de commit en inglés si aplica.
+2. **Pregunta** si debe hacerse commit y/o push.
+3. **Espera** confirmación antes de ejecutar cualquiera de los dos.
+
+## Qué cuenta como permiso explícito
+
+- Sí: «haz commit», «sube los cambios», «push a main», «commit and push».
+- No: «arregla el CI», «prepara la PR», «termina la tarea» — aunque impliquen
+  subir cambios, **pregunta antes** de commit/push.
+
+## Sin permiso explícito, sí puedes
+
+- `git status`, `git diff`, `git log`, `git fetch`, `git branch`, staging solo
+  si la tarea lo pidió explícitamente.
+- Editar código, tests y linters.
+
+## Ejemplos
+
+```text
+# ❌ MAL — push implícito tras arreglar tests
+Usuario: «Corrige el fallo de Python 3.8»
+Agente: [fix] → git commit → git push   # sin preguntar
+
+# ✅ BIEN
+Usuario: «Corrige el fallo de Python 3.8»
+Agente: [fix] → «¿Hago commit y push al fork? Mensaje propuesto: …»
+Usuario: «Sí, push»
+Agente: git commit && git push
+```
+
+Detalle de ramas protegidas, mensajes y `.gitignore` → regla `git-conventions`.
