@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Fecha | 2026-08-27 |
-| Estado | planificado |
+| Estado | planificado (issue #13 en progreso — 2026-08-31) |
 | Entorno | Cluster Taurus (sesión interactiva + jobs ligeros) |
 | Repo de producto | `density_field_properties` |
 | Repo toolkit (notas) | `phd-agents-toolkit` |
@@ -34,10 +34,16 @@ Eres un agente que trabaja **desde Taurus** (SSH interactivo o sesión en el nod
 | FastPM Rockstar nbody | `/data21/users/mruiz/fastpm_MN5/fastpm_tfm/rockstar_out_nbody/out_*.list` |
 | Config catálogos | `config/fastpm_folders.md` (dentro del repo) |
 | Notebook Haloscope MN5 | `notebooks/SIM_to_FASTPM_unitsim_fastpm_mn5.ipynb` |
+| Notebook Haloscope tidal (`T/|U|` + anisotropía) | `notebooks/SIM_to_FASTPM_unitsim_fastpm_mn5_tidal.ipynb` |
 | Notebook template | `notebooks/SIM_to_FASTPM_enviarSanti.ipynb` |
-| Slurm Haloscope | `slurm/sim_to_fastpm/main_sim_to_fastpm_haloscope.slurm` |
-| Salida smoke (si existe) | `output/sim_to_fastpm_haloscope_smoke/` |
-| Salida tidal (no usar para Haloscope) | `output/fast_pm_bigfile/tidal_anisotropy/` |
+| Slurm Haloscope (`env`) | `slurm/sim_to_fastpm/main_sim_to_fastpm_haloscope.slurm` |
+| Slurm Haloscope tidal (full) | `slurm/sim_to_fastpm/main_sim_to_fastpm_haloscope_tidal.slurm` |
+| Slurm Haloscope tidal (smoke / `QUICK_RUN`) | `slurm/sim_to_fastpm/main_sim_to_fastpm_haloscope_tidal_smoke.slurm` |
+| CLI tidal E2E | `scripts/run_sim_to_fastpm_haloscope_tidal.py` (`--quick-run`, `--assembly-bias`) |
+| Salida smoke `env` | `output/sim_to_fastpm_haloscope_smoke/` |
+| Salida smoke tidal | `output/sim_to_fastpm_haloscope_tidal_smoke/` |
+| Salida tidal producción | `output/sim_to_fastpm_haloscope_tidal/` |
+| Descriptores tidales UNIT / FastPM | `output/unit_files/tidal_anisotropy/`, `output/fast_pm_bigfile/tidal_anisotropy/` |
 
 ### Documentación de apoyo
 
@@ -76,7 +82,7 @@ flowchart LR
 | [#5](https://github.com/computationalAstroUAM/density_field_properties/issues/5) Rockstar reader | Cerrada | Reader listo; validar con `head` de `out_8.list` |
 | [#6](https://github.com/computationalAstroUAM/density_field_properties/issues/6) SIM→FastPM Haloscope | Abierta | Notebook MN5 + subset |
 | [#12](https://github.com/computationalAstroUAM/density_field_properties/issues/12) Tidal output 8 cols | Abierta | **Fix en código + tests** (puede ser en portátil o Taurus) |
-| [#13](https://github.com/computationalAstroUAM/density_field_properties/issues/13) E2E Haloscope | Abierta | Después de rerun subset |
+| [#13](https://github.com/computationalAstroUAM/density_field_properties/issues/13) E2E Haloscope | Abierta | **En progreso** — ver [`2026-08-31-issue-13-haloscope-e2e-progress.md`](2026-08-31-issue-13-haloscope-e2e-progress.md) |
 | [#14](https://github.com/computationalAstroUAM/density_field_properties/issues/14) R200c vs R200b | Abierta | Solo nota de decisión si hay tiempo |
 | [#15](https://github.com/computationalAstroUAM/density_field_properties/issues/15) UNIT tidal a=1 | Abierta | Bloqueada por #12 — no ejecutar hoy |
 | [#16](https://github.com/computationalAstroUAM/density_field_properties/issues/16) HMF + ratios | Abierta | Lectura Ramakrishnan + esquema |
@@ -92,6 +98,72 @@ flowchart LR
 **Bloqueante principal documentado:** falta fijar la **SIM de entrenamiento** (`SIM_PATH`, `hlist`, box). Sin SIM configurada, Haloscope solo puede cargar FastPM; el `fit` no corre.
 
 **No bloqueante para Haloscope `env`:** bug #12 en descriptores tidales. No usar `*_halo_environment_descriptors.txt` hasta el fix.
+
+---
+
+## Issue #13 — Progreso E2E Haloscope (2026-08-31)
+
+**Nota detallada (comentario GitHub incluido):** [`2026-08-31-issue-13-haloscope-e2e-progress.md`](2026-08-31-issue-13-haloscope-e2e-progress.md)
+
+**Issue:** [#13](https://github.com/computationalAstroUAM/density_field_properties/issues/13) — *End-to-end Haloscope workflow tests (Rockstar T/|U| column)*
+
+### Objetivo de la issue
+
+Flujo Haloscope reproducible de extremo a extremo, usando la columna Rockstar **`T/|U|`** y validación del pipeline con smoke tests / Slurm.
+
+### Hecho en esta sesión (rama de trabajo local, sin commit)
+
+| Entregable | Estado | Notas |
+| --- | --- | --- |
+| Notebook tidal E2E | ✅ | `notebooks/SIM_to_FASTPM_unitsim_fastpm_mn5_tidal.ipynb` — inputs `t_over_u` + `tidal_anisotropy`, `QUICK_RUN=True`, sección assembly bias (Fig. 4) |
+| Módulo features | ✅ | `haloscope/sim_to_fastpm/tidal_features.py` — carga batches de descriptores, merge por celda CIC, filtro finitos |
+| Pipeline Python | ✅ | `haloscope/sim_to_fastpm/pipeline_tidal.py` — enrich + `write_tidal_assembly_bias_panel` |
+| CLI scripted smoke / full | ✅ | `scripts/run_sim_to_fastpm_haloscope_tidal.py` — flags `--quick-run`, `--assembly-bias` |
+| Slurm smoke | ✅ | `slurm/sim_to_fastpm/main_sim_to_fastpm_haloscope_tidal_smoke.slurm` |
+| Slurm producción | ✅ | `slurm/sim_to_fastpm/main_sim_to_fastpm_haloscope_tidal.slurm` (catálogos completos + PDF assembly bias) |
+| Tests unitarios | ✅ | `src/tests/haloscope/test_tidal_features.py` — 3 passed |
+| Smoke E2E local | ✅ | `output/sim_to_fastpm_haloscope_tidal_smoke/fastpm_out_8_haloscope_tidal_enriched.parquet` (2026-08-31) |
+| Columna `T/|U|` Rockstar | ✅ | FastPM índice 37 en `.list`; UNIT índice 56 en `hlist_1.00000.list.bz2` |
+| Config smoke | ✅ | `config.py`: `TIDAL_INPUT_FEATURES`, `SMOKE_*`, `OUTPUT_DIR_TIDAL_SMOKE` |
+
+### Criterios de aceptación #13 — estado
+
+| Criterio | Estado |
+| --- | --- |
+| Procedimiento de test documentado | 🟡 Parcial — notebook §9 + docstring del script + esta nota |
+| Test automatizado o smoke script con fallo claro | 🟡 Parcial — CLI + tests unitarios; falta test integración pytest dedicado (#13) |
+| Notas sobre tolerancias numéricas vs Rockstar `T/|U|` | ❌ Pendiente |
+| Run Slurm catálogo completo | ❌ Pendiente — script listo, no ejecutado aún |
+| PDF `assembly_bias_tidal_input.pdf` en smoke | ❌ Pendiente en smoke completo — requiere `--assembly-bias`; con 1 batch de descriptores FastPM queda ~1 halo con match |
+
+### Comandos E2E (issue #13)
+
+```bash
+# Smoke local (equivalente notebook QUICK_RUN=True)
+cd /home/arnes/santiago_arranz/density_field_properties
+conda activate density_field_properties
+export PYTHONPATH=src
+python scripts/run_sim_to_fastpm_haloscope_tidal.py --quick-run --assembly-bias
+
+# Smoke Slurm
+sbatch slurm/sim_to_fastpm/main_sim_to_fastpm_haloscope_tidal_smoke.slurm
+
+# Producción Slurm (catálogo completo + assembly bias)
+sbatch slurm/sim_to_fastpm/main_sim_to_fastpm_haloscope_tidal.slurm
+```
+
+### Bloqueos / riesgos conocidos
+
+- **Quick run + 1 batch de descriptores:** el merge grid-cell deja muy pocos halos FastPM con `tidal_anisotropy` (~1 en prueba local). Para smoke fiable: subir `SMOKE_MAX_DESCRIPTOR_BATCH_FILES` en `config.py` o pasar `--max-descriptor-batches 3`.
+- **Issue #12:** descriptores tidales deben tener 8 columnas; verificar antes de confiar en runs largos.
+- **Sin commit/push** al cierre de esta sesión — cambios solo en working tree.
+
+### Siguiente para cerrar #13
+
+1. Ejecutar smoke Slurm con `--assembly-bias` y revisar PDF + parquet.
+2. Añadir test integración pytest (subset fijo, skip si no hay catálogos en cluster) análogo a `test_sim_to_fastpm_haloscope_smoke.py`.
+3. Run producción Slurm cuando `squeue` libre y descriptores tidales validados.
+4. Documentar check explícito `t_over_u` cargado vs columna Rockstar en un halo de referencia.
 
 ---
 
@@ -285,6 +357,7 @@ grep -v '^#' "$FASTPM_LIST" | wc -l
 
 | Hora | Bloque | Resumen | Bloqueos |
 | --- | --- | --- | --- |
+| 2026-08-31 | #13 | Pipeline tidal E2E: notebook, `tidal_features.py`, `pipeline_tidal.py`, CLI, Slurm smoke+full, tests unitarios, smoke parquet OK | FastPM quick-run: pocos halos con descriptor (1 batch); full Slurm sin lanzar |
 | | 0 | | |
 | | 1 | | |
 | | 2 | | |
@@ -299,5 +372,6 @@ grep -v '^#' "$FASTPM_LIST" | wc -l
 - **Decisiones:** …
 - **Fix #12:** rama/commit …
 - **Haloscope subset:** salida en …
+- **Issue #13 (E2E tidal):** smoke parquet en `output/sim_to_fastpm_haloscope_tidal_smoke/`; pipeline + Slurm listos; producción y test integración pytest pendientes
 - **Matching muestra:** fracción emparejada …
-- **Siguiente sesión:** …
+- **Siguiente sesión:** smoke Slurm con `--assembly-bias`; subir `SMOKE_MAX_DESCRIPTOR_BATCH_FILES` si FastPM queda vacío; pytest integración #13

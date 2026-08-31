@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Fecha | 2026-08-31 |
-| Estado | planificado |
+| Estado | **en progreso** — r(k) calculado; pendiente param files, nota análisis y Notion |
 | Entorno | Cluster Taurus (SSH interactivo; job Slurm opcional y ligero) |
 | Repo de producto | `density_field_properties` |
 | Repo toolkit (notas) | `phd-agents-toolkit` |
@@ -33,7 +33,11 @@ Eres un agente que trabaja **desde Taurus** (SSH interactivo o sesión en el nod
 | Toolkit (notas) | `/home/arnes/santiago_arranz/phd-agents-toolkit` |
 | FastPM Rockstar PM | `/data21/users/mruiz/fastpm_MN5/fastpm_tfm/rockstar_out_pm/out_8.list` |
 | FastPM Rockstar nbody | `/data21/users/mruiz/fastpm_MN5/fastpm_tfm/rockstar_out_nbody/out_8.list` |
-| UNIT Rockstar (confirmado Adrián) | `/data21/UNITSIM/fixedAmp_InvPhase_001/ROCKSTAR` |
+| UNIT Rockstar (Adrián, a=1) | `/data21/UNITSIM/fixedAmp_InvPhase_001/ROCKSTAR/out_128p.list.bz2` |
+| UNIT hlist (legacy /data5, no usado en verificación final) | `/data5/UNITSIM/fixedAmp_InvPhase_001/ROCKSTAR/outputs/hlists/hlist_1.00000.list.bz2` |
+| Script verificación | `density_field_properties/scripts/verify_fastpm_unit_ics.py` |
+| Slurm verificación | `density_field_properties/slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics.slurm` |
+| Salida numérica | `density_field_properties/output/fastpm_unit_seed_check/` |
 | Tutorial FastPM (param files) | `/home/adrian/UNIT_PNG/tutorial_fastpm/` |
 | Salida de esta sesión | `phd-agents-toolkit/notes/analisis/2026-08-31-fastpm-unit-seed-check.md` |
 
@@ -80,7 +84,9 @@ flowchart LR
 | Adrián | Verificar con r(k) antes del matching 1-1 |
 | Notion tarea matching | Subtarea activa: **Verificar ICs con r(k)** |
 
-**Hipótesis de trabajo:** snapshot FastPM `out_8.list` ≈ z ≈ 1. Hay que localizar el snapshot UNIT equivalente bajo `ROCKSTAR/` (p. ej. `out_*.list` o estructura por redshift).
+**Corrección importante (31 ago):** FastPM `out_8.list` tiene `#a = 1.000000` (z = 0), **no** z ≈ 1. El índice `out_8` no es redshift. Snapshot UNIT equivalente: **`out_128p.list.bz2`** (`#a = 1.000000`). No usar `out_8p` (a = 0.0701).
+
+**Hipótesis revisada:** comparar ambos catálogos Rockstar a **a = 1** en caja 1000 Mpc/h.
 
 ---
 
@@ -156,13 +162,11 @@ ls -la "$UNIT_ROCKSTAR" | head -20
 | 1.4 | Buscar param files FastPM bajo `fastpm_MN5/` y `tutorial_fastpm/` | `grep -iE 'seed\|IC\|box\|omega'` |
 | 1.5 | Buscar metadata UNIT bajo `fixedAmp_InvPhase_001/` | Misma seed/phase si está documentada |
 
-**Preguntas a resolver:**
+**Preguntas resueltas / pendientes:**
 
-- ¿Qué `out_*.list` de UNIT corresponde a `out_8` de FastPM?
-- ¿Box 1 Gpc/h en ambos?
-- ¿Aparece `fixedAmp_InvPhase_001` (o equivalente) en ambos lados?
-
-Anotar en la nota de salida antes de seguir.
+- [x] ¿Qué snapshot UNIT corresponde a `out_8` FastPM a a=1? → **`out_128p.list.bz2`**
+- [x] ¿Box 1 Gpc/h en ambos? → **Sí (1000 Mpc/h)**
+- [ ] ¿Misma seed/phase en param files? → **Pendiente (bloque 1)**
 
 ---
 
@@ -255,32 +259,32 @@ Si `PKL.XPk` no está disponible, alternativa mínima:
 ```markdown
 ## Veredicto
 
-- **ICs compatibles:** SÍ / NO / INCONCLUSO
-- **Evidencia:** r(k) mediana = … en k < … h/Mpc; headers …
-- **Snapshot UNIT usado:** …
-- **Siguiente paso:** matching por proximidad / escalar a Adrián
+- **ICs compatibles:** NO
+- **Evidencia:** mediana r(k) = 0.17 en k < 0.05 h/Mpc (500k centrales, n_grid=256); headers OK
+- **Snapshot UNIT usado:** out_128p.list.bz2
+- **Siguiente paso:** param files + escalar a Adrián; no matching 1-1 aún
 ```
 
 ---
 
-## Script sugerido (crear si no existe)
+## Script implementado
 
-Ubicación propuesta: `density_field_properties/scripts/verify_fastpm_unit_ics.py`
+Ubicación: `density_field_properties/scripts/verify_fastpm_unit_ics.py`
 
-El agente puede implementarlo en esta sesión **solo si el usuario lo aprueba** (evitar commit sin permiso). Alternativa: notebook exploratorio en `notebooks/` o celdas en sesión interactiva.
+- Módulo P(k): `src/density_field_properties/density_field/power_spectrum.py`
+- Loaders centrales (streaming): `load_fastpm_central_target_catalog`, `load_unit_rockstar_target_catalog`
+- Defaults: FastPM `out_8.list`, UNIT `out_128p.list.bz2`, `--n-halos 500000`, centrales (`DescID`/`PID == -1`)
 
-Argumentos CLI mínimos:
+```bash
+cd /home/arnes/santiago_arranz/density_field_properties
+source src/.venv/bin/activate  # o: conda activate density_field_properties
+export PYTHONPATH="${PWD}/src:${PYTHONPATH}"
 
-```text
---fastpm-list PATH
---unit-list PATH
---box-size FLOAT
---n-halos INT
---n-grid INT
---output-dir PATH
+sbatch slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics.slurm
+# Logs Slurm: output/fastpm_unit_ics.out / .log
 ```
 
-Salida: `r_k.csv`, `r_k.png`, `summary.json`.
+Salida: `r_k.csv`, `r_k.png`, `summary.json` en `--output-dir`.
 
 ---
 
@@ -308,14 +312,14 @@ mkdir -p output/fastpm_unit_seed_check
 
 ## Criterios de aceptación (fin de sesión)
 
-- [ ] Rutas FastPM y UNIT confirmadas; snapshot UNIT a z ≈ 1 identificado.
-- [ ] Tabla comparativa de headers (box, h, cosmología).
+- [x] Rutas FastPM y UNIT confirmadas; snapshot UNIT a **a = 1** identificado (`out_128p.list.bz2`).
+- [x] Headers: box = 1000 Mpc/h, Om = 0.3089, Ol = 0.6911, h = 0.6774 (ambos catálogos).
 - [ ] Parameter files revisados (seed/phase anotados).
-- [ ] r(k) calculado en subset y figura guardada.
-- [ ] Veredicto explícito: ICs compatibles / no / inconcluso.
+- [x] r(k) calculado en subset(s) y figura guardada.
+- [x] Veredicto explícito: **ICs NO compatibles** según umbral r(k) > 0.9.
 - [ ] Nota `2026-08-31-fastpm-unit-seed-check.md` creada.
 - [ ] Notion actualizado (subtarea verificación ICs).
-- [ ] Tabla «Notas de sesión» al final de este plan actualizada.
+- [x] Tabla «Notas de sesión» al final de este plan actualizada.
 
 ---
 
@@ -323,18 +327,70 @@ mkdir -p output/fastpm_unit_seed_check
 
 | Hora | Bloque | Resumen | Bloqueos |
 | --- | --- | --- | --- |
-| | 0 | | |
-| | 1 | | |
-| | 2 | | |
-| | 3 | | |
-| | 4 | | |
+| ~15:00 | 0 | Rutas OK; venv conda `density_field_properties`; mutex Slurm respetado | Primer sbatch falló: directorio log inexistente |
+| ~15:06 | 3 | Job 98398: script + r(k); logs en `output/fastpm_unit_ics.*` | — |
+| ~15:30 | 1–3 | UNIT cambiado a `/data21/.../out_128p.list.bz2` (Adrián); soporte bz2 en reader | hlist `/data5` daba r(k) bajo; snapshot `out_8p` es a=0.07 |
+| ~16:06 | 3 | Job 98400: n_grid=256, 100k halos asimétricos → mediana r(k)=0.24 | FastPM sin filtro central inicialmente |
+| ~16:37 | 2–3 | Conteo catálogos: FastPM ~2M filas; UNIT ~174M filas | Catálogo UNIT completo inviable en memoria |
+| ~17:15 | 2–3 | Job 98402: **500k centrales** simétricos, n_grid=256 → mediana r(k)=**0.17** | r(k) baja al aumentar N (descartada hipótesis “pocos halos”) |
 
 ---
 
-## Resultado (rellenar al cerrar)
+## Resultado (sesión 2026-08-31)
 
-- **Snapshot UNIT:** …
-- **Headers:** box = …, h = …, Om = …
-- **r(k) grandes escalas:** …
-- **Veredicto ICs:** …
-- **Siguiente sesión:** matching por proximidad / …
+### Snapshots y tamaños
+
+| Catálogo | Ruta | a | Filas totales (aprox.) |
+| --- | --- | --- | --- |
+| FastPM | `.../rockstar_out_pm/out_8.list` | 1.000 | ~1,98 M |
+| UNIT | `.../ROCKSTAR/out_128p.list.bz2` | 1.000 | ~174 M |
+
+### Headers (coinciden)
+
+- **Box size:** 1000 Mpc/h
+- **Cosmología:** Om = 0.3089, Ol = 0.6911, h = 0.6774
+
+### Tabla r(k) — mediana en k < 0.05 h/Mpc
+
+| Job | N_halos | Selección | n_grid | mediana r(k) | Veredicto script |
+| --- | --- | --- | --- | --- | --- |
+| 98398 | 100k / 87k | UNIT centrales; FastPM sin filtro central | 128 | 0.28 | incompatible |
+| 98400 | 100k / 87k | idem | 256 | 0.24 | incompatible |
+| **98402** | **500k / 500k** | **Centrales simétricos (streaming)** | **256** | **0.17** | **incompatible** |
+
+Criterio Adrián: mediana r(k) > **0.9** → ICs compatibles; ≈ 0 → seeds distintas.
+
+**Run de referencia:** job **98402**. Artefactos en `density_field_properties/output/fastpm_unit_seed_check/`.
+
+### Veredicto
+
+- **ICs compatibles:** **NO** (según criterio r(k) a k bajos)
+- **Evidencia:** mediana r(k) = **0.17** (500k centrales, n_grid=256); headers y cosmología OK; aumentar muestra **no** acerca r(k) a 1
+- **Snapshot UNIT usado:** `out_128p.list.bz2`
+- **Parameter files:** **pendiente** — no revisados en esta sesión
+
+### Interpretación breve
+
+- La discrepancia **no parece explicarse** solo por subset pequeño o selección asimétrica de halos.
+- Posibles causas a investigar: seeds/ICs distintas pese a lo indicado por Adrián; diferencias PM vs N-body acumuladas ya a k bajos en trazador halos; convención Rockstar distinta (34 vs 55 columnas); primeros N halos del fichero no aleatorios (sesgo espacial débil pero posible).
+
+---
+
+## Siguientes pasos
+
+1. **Escalar a Adrián** con tabla r(k) y rutas definitivas; confirmar emparejamiento `out_8` ↔ `out_128p` y seeds en param files.
+2. **Bloque 1 pendiente:** buscar param files FastPM (`fastpm_MN5/`, `tutorial_fastpm/`) y metadata UNIT (`fixedAmp_InvPhase_001`); anotar seed / `InvPhase_001`.
+3. **Diagnóstico alternativo:** r(k) sobre **campo de materia** (DM CIC) en lugar de halos, si hay snapshots DM pareados a a=1.
+4. **Repetir con FastPM nbody:** `rockstar_out_nbody/out_8.list` (mismo a=1) por si el trazador PM degrada la correlación.
+5. **Documentar:** crear `notes/analisis/2026-08-31-fastpm-unit-seed-check.md` y actualizar Notion «Verificar ICs».
+6. **No iniciar matching 1-1** hasta resolver discrepancia r(k) o validación explícita de Adrián.
+
+---
+
+## Resultado (plantilla histórica — rellenada arriba)
+
+- **Snapshot UNIT:** `out_128p.list.bz2`
+- **Headers:** box = 1000 Mpc/h, h = 0.6774, Om = 0.3089
+- **r(k) grandes escalas:** mediana 0.17 (500k centrales, n_grid=256)
+- **Veredicto ICs:** NO compatibles
+- **Siguiente sesión:** param files + consulta Adrián; opcional DM P(k) o FastPM nbody
