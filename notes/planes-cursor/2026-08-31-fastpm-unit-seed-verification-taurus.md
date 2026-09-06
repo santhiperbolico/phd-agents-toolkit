@@ -36,9 +36,13 @@ Eres un agente que trabaja **desde Taurus** (SSH interactivo o sesión en el nod
 | UNIT Rockstar (Adrián, a=1) | `/data21/UNITSIM/fixedAmp_InvPhase_001/ROCKSTAR/out_128p.list.bz2` |
 | UNIT hlist (legacy /data5, no usado en verificación final) | `/data5/UNITSIM/fixedAmp_InvPhase_001/ROCKSTAR/outputs/hlists/hlist_1.00000.list.bz2` |
 | Script verificación | `density_field_properties/scripts/verify_fastpm_unit_ics.py` |
-| Slurm verificación | `density_field_properties/slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics.slurm` |
-| Salida numérica | `density_field_properties/output/fastpm_unit_seed_check/` |
-| Tutorial FastPM (param files) | `/home/adrian/UNIT_PNG/tutorial_fastpm/` |
+| Slurm verificación (halos) | `density_field_properties/slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics.slurm` |
+| Slurm verificación (DM) | `density_field_properties/slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics_dm.slurm` |
+| FastPM DM (a=1) | `/data21/users/mruiz/fastpm_MN5/fastpm_tfm/output_01/snap_1.0000/1` |
+| UNIT DM (a=1) | `/data21/UNITSIM/fixedAmp_InvPhase_001/DM_PARTICLES/dm_particles_0.5_128.bz2` |
+| Salida halos | `density_field_properties/output/fastpm_unit_seed_check/` |
+| Salida DM | `density_field_properties/output/fastpm_unit_seed_check_dm/` |
+| Doc modo DM | [`notes/analisis/2026-09-06-fastpm-unit-dm-rk-verification.md`](../analisis/2026-09-06-fastpm-unit-dm-rk-verification.md) |
 | Salida de esta sesión | `phd-agents-toolkit/notes/analisis/2026-08-31-fastpm-unit-seed-check.md` |
 
 ### Documentación de apoyo
@@ -273,7 +277,10 @@ Ubicación: `density_field_properties/scripts/verify_fastpm_unit_ics.py`
 
 - Módulo P(k): `src/density_field_properties/density_field/power_spectrum.py`
 - Loaders centrales (streaming): `load_fastpm_central_target_catalog`, `load_unit_rockstar_target_catalog`
-- Defaults: FastPM `out_8.list`, UNIT `out_128p.list.bz2`, `--n-halos 500000`, centrales (`DescID`/`PID == -1`)
+- Defaults halos: FastPM `out_8.list`, UNIT `out_128p.list.bz2`, `--n-halos 500000`, reservoir sampling si hay cap
+- **Modo DM (2026-09-06):** `--tracer dm` — CIC desde partículas; ver nota [`2026-09-06-fastpm-unit-dm-rk-verification.md`](../analisis/2026-09-06-fastpm-unit-dm-rk-verification.md)
+
+### Halos (default)
 
 ```bash
 cd /home/arnes/santiago_arranz/density_field_properties
@@ -284,7 +291,15 @@ sbatch slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics.slurm
 # Logs Slurm: output/fastpm_unit_ics.out / .log
 ```
 
-Salida: `r_k.csv`, `r_k.png`, `summary.json` en `--output-dir`.
+### Materia DM
+
+```bash
+sbatch slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics_dm.slurm
+# Logs: output/fastpm_unit_ics_dm.out / .log
+# Salida: output/fastpm_unit_seed_check_dm/
+```
+
+Salida en ambos modos: `r_k.csv`, `r_k.png`, `summary.json` en `--output-dir`.
 
 ---
 
@@ -333,6 +348,8 @@ mkdir -p output/fastpm_unit_seed_check
 | ~16:06 | 3 | Job 98400: n_grid=256, 100k halos asimétricos → mediana r(k)=0.24 | FastPM sin filtro central inicialmente |
 | ~16:37 | 2–3 | Conteo catálogos: FastPM ~2M filas; UNIT ~174M filas | Catálogo UNIT completo inviable en memoria |
 | ~17:15 | 2–3 | Job 98402: **500k centrales** simétricos, n_grid=256 → mediana r(k)=**0.17** | r(k) baja al aumentar N (descartada hipótesis “pocos halos”) |
+| 2026-09-06 | 2–3 | Fix PID por cabecera Rockstar + reservoir sampling; rerun → mediana r(k) ≈ **0.35** (inconclusive) | Aún lejos de 0.9 |
+| 2026-09-06 | DM | Implementado `--tracer dm` + Slurm `main_verify_fastpm_unit_ics_dm.slurm` | Pendiente sbatch y resultado r(k) DM |
 
 ---
 
@@ -380,7 +397,7 @@ Criterio Adrián: mediana r(k) > **0.9** → ICs compatibles; ≈ 0 → seeds di
 
 1. **Escalar a Adrián** con tabla r(k) y rutas definitivas; confirmar emparejamiento `out_8` ↔ `out_128p` y seeds en param files.
 2. **Bloque 1 pendiente:** buscar param files FastPM (`fastpm_MN5/`, `tutorial_fastpm/`) y metadata UNIT (`fixedAmp_InvPhase_001`); anotar seed / `InvPhase_001`.
-3. **Diagnóstico alternativo:** r(k) sobre **campo de materia** (DM CIC) en lugar de halos, si hay snapshots DM pareados a a=1.
+3. **Diagnóstico alternativo:** r(k) sobre **campo de materia** (DM CIC) — **implementado** (`--tracer dm`); pendiente run Slurm y veredicto numérico → nota [`2026-09-06-fastpm-unit-dm-rk-verification.md`](../analisis/2026-09-06-fastpm-unit-dm-rk-verification.md).
 4. **Repetir con FastPM nbody:** `rockstar_out_nbody/out_8.list` (mismo a=1) por si el trazador PM degrada la correlación.
 5. **Documentar:** crear `notes/analisis/2026-08-31-fastpm-unit-seed-check.md` y actualizar Notion «Verificar ICs».
 6. **No iniciar matching 1-1** hasta resolver discrepancia r(k) o validación explícita de Adrián.
