@@ -70,12 +70,16 @@ No confundir **Rdisp** (dispersión espacial del grupo FoF) con metadatos MPI ni
 - **Vdisp** y **Rdisp** entran en el refinamiento **RFOF** (`rfof.c`) para separar subestructura kinemática.
 - **Task** se puede ignorar en análisis científico (solo I/O MPI).
 - **RVdisp** aporta forma/movimiento interno; no aparece en el corte RFOF básico.
+- **¿Rdisp para masa M200b?** No como sustituto de M200b; sí para forma FoF y como feature auxiliar en matching. Ver [`../analisis/2026-09-08-rdisp-forma-masa-m200b.md`](../analisis/2026-09-08-rdisp-forma-masa-m200b.md).
 
 ---
 
 ## Enlaces
 
-- Análisis completo (tablas attr-v2, código, ejemplo Python): [`../analisis/2026-09-06-fastpm-fof-bigfile-fields.md`](../analisis/2026-09-06-fastpm-fof-bigfile-fields.md)
+- Análisis completo (tablas attr-v2, tensor de segundos momentos, código, Python): [`../analisis/2026-09-06-fastpm-fof-bigfile-fields.md`](../analisis/2026-09-06-fastpm-fof-bigfile-fields.md)
+- Rdisp vs M200b/M200c: [`../analisis/2026-09-08-rdisp-forma-masa-m200b.md`](../analisis/2026-09-08-rdisp-forma-masa-m200b.md)
+- NFW + Rdisp → R200c: [`../analisis/2026-09-08-rdisp-nfw-estimacion-r200c.md`](../analisis/2026-09-08-rdisp-nfw-estimacion-r200c.md)
+- Masa FoF + Ap. C Ramakrishnan: [`../analisis/2026-09-08-fof-masa-calibracion-ramakrishnan-apc.md`](../analisis/2026-09-08-fof-masa-calibracion-ramakrishnan-apc.md)
 - **Notion (Notes PhD):** [FastPM FoF bigfile — Rdisp, Vdisp, RVdisp, Task](https://app.notion.com/p/3d32070c3c288156b8f1f569f5fbc603)
 - Issue Haloscope: [#13](https://github.com/computationalAstroUAM/density_field_properties/issues/13)
 - Código FastPM: `FastPM/fastpm/libfastpm/fof.c`, `store.c`, `libfastpmio/io.c`

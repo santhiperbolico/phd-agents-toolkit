@@ -176,3 +176,6 @@ Ver también `config/fastpm_folders.md` en `density_field_properties`.
 - Issue #6: `CALIBRATE_MASS` en flujo SIM→FastPM.
 - Issue #16: HMF + ratios normalizados a UNIT.
 - Notas Violeta: «Use of LR-UNIT, 2048³ and new FastPM w Rockstar».
+- **FoF + Ap. C vs M200c Rockstar:** [`2026-09-08-fof-masa-calibracion-ramakrishnan-apc.md`](2026-09-08-fof-masa-calibracion-ramakrishnan-apc.md)
+- **Ap. C explicado (RF, HMF LR):** [`2026-09-09-ramakrishnan-apendice-c-rf-masa.md`](2026-09-09-ramakrishnan-apendice-c-rf-masa.md)
+- **Rdisp / NFW / M200c:** [`2026-09-08-rdisp-forma-masa-m200b.md`](2026-09-08-rdisp-forma-masa-m200b.md), [`2026-09-08-rdisp-nfw-estimacion-r200c.md`](2026-09-08-rdisp-nfw-estimacion-r200c.md)
