@@ -2,228 +2,159 @@
 
 | Campo | Valor |
 | --- | --- |
-| Fecha | 2026-09-06 |
-| Estado | implementado — pendiente ejecución en Taurus y veredicto numérico |
+| Fecha inicio | 2026-09-06 |
+| Fecha resultado | 2026-09-08 |
+| Estado | **completado — ICs compatibles** |
 | Repo producto | `density_field_properties` |
 | Repo notas | `phd-agents-toolkit` |
 | Plan relacionado | [`2026-08-31-fastpm-unit-seed-verification-taurus.md`](../planes-cursor/2026-08-31-fastpm-unit-seed-verification-taurus.md) |
 | Script | `density_field_properties/scripts/verify_fastpm_unit_ics.py` |
 | Slurm DM | `density_field_properties/slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics_dm.slurm` |
+| Salida | `density_field_properties/output/fastpm_unit_seed_check_dm/` |
 
 ---
 
-## Motivación
+## Objetivo
 
-La verificación r(k) sobre **halos Rockstar** (mediana ≈ 0,17–0,35 tras corregir PID y muestreo) sigue lejos del umbral de Adrián (mediana r(k) > 0,9 a k bajos). Antes de escalar el resultado o iniciar matching 1-1, conviene un trazador más limpio de las **condiciones iniciales**: el campo de **materia oscura** δ(x) a **a = 1**.
+Confirmar si FastPM (`fastpm_MN5/fastpm_tfm`) y UNIT (`fixedAmp_InvPhase_001`) comparten
+condiciones iniciales mediante el coeficiente de correlación esférico
 
-Ventajas frente a halos:
+`r(k) = P_cross(k) / sqrt(P_UNIT(k) × P_FastPM(k))`
 
-- No depende de Rockstar, filtros `PID` ni sesgos de muestreo del catálogo.
-- El cross-correlacionado mide directamente la alineación de modos de densidad.
-- Reutiliza el pipeline CIC ya probado en Haloscope (`assembly_bias`, `particle_io`).
+con trazador **partículas DM** (CIC → δ(x) → FFT), no halos Rockstar.
 
----
-
-## Funcionalidad añadida
-
-### Modo `--tracer dm`
-
-El script `verify_fastpm_unit_ics.py` admite dos trazadores mutuamente excluyentes:
-
-| `--tracer` | Descripción | Entrada por defecto |
-| --- | --- | --- |
-| `halos` | CIC sobre halos Rockstar (comportamiento anterior) | `out_8.list`, `out_128p.list.bz2` |
-| `dm` | CIC sobre partículas DM → δ(x) → r(k) | FastPM BigFile + UNIT bz2 |
-
-Salidas idénticas en ambos modos: `r_k.csv`, `r_k.png`, `summary.json` (campo `"tracer": "dm"` o `"halos"`).
-
-### Rutas DM por defecto (Taurus, a = 1)
-
-| Simulación | Ruta | Formato |
-| --- | --- | --- |
-| FastPM | `/data21/users/mruiz/fastpm_MN5/fastpm_tfm/output_01/snap_1.0000/1` | FastPM BigFile (`Position`) |
-| UNIT | `/data21/UNITSIM/fixedAmp_InvPhase_001/DM_PARTICLES/dm_particles_0.5_128.bz2` | Texto whitespace-separated, bzip2 |
-
-Constantes en `config.py`:
-
-- `FASTPM_DM_PARTICLES_PATH`
-- `UNIT_DM_PARTICLES_PATH` (snapshot **128** → `a = 1` según `redshift_list.txt`)
-- `DM_MASS_PARTICLE_MSUN_H = 1.2e9` (Msun/h)
-- `FASTPM_BOXSIZE_MPC_H` / `SIM_BOXSIZE_MPC_H` = 1000 Mpc/h
-
-### Soporte `.bz2` en `particle_io.py`
-
-Los ficheros UNIT comprimidos se detectan como formato `"text"` y se leen con `bz2.open` en lotes (`iter_dm_particle_batches`), igual que el texto plano usado en desarrollo local (`output/unit_files/dm_particles_0.5_128`).
-
-### CIC precomputado (opcional)
-
-Si ya existe un campo CIC guardado con `main_density_field_cic` (binario + `*_density_info.txt`), se puede omitir la deposición en vivo:
-
-```bash
---fastpm-saved-density PATH --fastpm-saved-density-info PATH
---unit-saved-density PATH --unit-saved-density-info PATH
-```
-
-Si no se pasan, el script construye δ desde partículas (`DM+CIC` en `summary.json`).
+**Criterio Adrián:** mediana r(k) > **0,9** para k < 0,05 h/Mpc → ICs compatibles.
 
 ---
 
-## Uso en Taurus
+## Motivación del trazador DM
 
-### Interactivo (login node — solo smoke tests pequeños)
+La verificación sobre **halos Rockstar** (jobs 98398–98402, agosto 2026) dio mediana
+r(k) ≈ **0,17–0,35** a k bajos y llevó al veredicto «ICs NO compatibles». Ese resultado
+era un **falso negativo**: el campo CIC de posiciones de halos mezcla incompletitud del
+finder, sesgo PM vs N-body y muestreo asimétrico entre catálogos (2 M vs 174 M filas).
 
-```bash
-REPO=/home/arnes/santiago_arranz/density_field_properties
-cd "$REPO"
-source src/.venv/bin/activate  # o: conda activate density_field_properties
-export PYTHONPATH="${REPO}/src:${PYTHONPATH}"
+El trazador DM mide directamente la alineación de modos de densidad a a = 1.
 
-python scripts/verify_fastpm_unit_ics.py \
-    --tracer dm \
-    --n-grid 128 \
-    --dm-batch-size 2000000 \
-    --output-dir output/fastpm_unit_seed_check_dm_smoke
-```
+---
 
-### Slurm (recomendado)
-
-```bash
-cd /home/arnes/santiago_arranz/density_field_properties
-sbatch slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics_dm.slurm
-```
-
-Parámetros del job por defecto:
+## Configuración del run
 
 | Parámetro | Valor |
 | --- | --- |
 | `--tracer` | `dm` |
 | `--n-grid` | 256 |
 | `--dm-batch-size` | 5_000_000 |
-| `--output-dir` | `output/fastpm_unit_seed_check_dm` |
-| Tiempo | 8 h |
-| CPUs | 16 |
+| `--k-low-threshold` | 0,05 h/Mpc |
+| Box | 1000 Mpc/h |
+| m_p | 1,2×10⁹ M☉/h |
 
-Logs: `output/fastpm_unit_ics_dm.out` / `.log`
+### Rutas DM (a = 1)
 
-### Argumentos CLI relevantes (modo DM)
-
-| Flag | Default | Notas |
+| Simulación | Ruta | Formato |
 | --- | --- | --- |
-| `--tracer dm` | — | Activa modo materia |
-| `--fastpm-dm` | BigFile `snap_1.0000/1` | Directorio de bloque FastPM |
-| `--unit-dm` | `dm_particles_0.5_128.bz2` | Fichero UNIT a a=1 |
-| `--dm-mass-particle` | `1.2e9` | Msun/h |
-| `--dm-batch-size` | `5000000` | Tamaño de lote I/O |
-| `--box-size` | 1000 Mpc/h | Sin cabeceras Rockstar en modo DM |
-| `--n-grid` | 128 (script) / 256 (Slurm DM) | Resolución CIC |
-| `--k-low-threshold` | 0.05 h/Mpc | Umbral para mediana resumen |
+| FastPM | `/data21/users/mruiz/fastpm_MN5/fastpm_tfm/output_01/snap_1.0000/1` | BigFile (`Position`) |
+| UNIT | `/data21/UNITSIM/fixedAmp_InvPhase_001/DM_PARTICLES/dm_particles_0.5_128.bz2` | Texto bzip2 |
+
+Cosmología y box ya verificados en headers Rockstar (31 ago): Ω_m = 0,3089,
+Ω_Λ = 0,6911, h = 0,6774.
 
 ---
 
-## Flujo interno
+## Resultados
 
-```mermaid
-flowchart TD
-    A[verify_fastpm_unit_ics.py --tracer dm] --> B{saved CIC?}
-    B -->|sí| C[matter_overdensity_from_saved_cic]
-    B -->|no| D[matter_overdensity_field_from_dm]
-    D --> E[iter_dm_particle_batches]
-    E --> F{text / bz2 / BigFile}
-    F --> G[density_field_cic_main]
-    G --> H[delta_fastpm, delta_unit]
-    C --> H
-    H --> I[spherical_power_spectra]
-    I --> J[r_k.csv, r_k.png, summary.json]
-```
+### Resumen numérico
 
-Módulos reutilizados:
+| Métrica | Valor |
+| --- | ---: |
+| **mediana r(k), k < 0,05 h/Mpc** | **1,000** |
+| r(k) en k ≈ 0,1 h/Mpc | ≈ 0,998 |
+| r(k) en k ≈ 1,0 h/Mpc | ≈ 0,978 |
+| r(k) en k ≈ 1,5 h/Mpc | ≈ 0,965 |
+| Veredicto script | **compatible** |
 
-- `density_field.particle_io` — detección de formato y lotes
-- `density_field.cic_deposit.delta_field_from_dm_particles`
-- `haloscope.sim_to_fastpm.assembly_bias.matter_overdensity_field_from_dm`
-- `density_field.power_spectrum.spherical_power_spectra`
+### Figura
 
----
+`r_k.png` en `output/fastpm_unit_seed_check_dm/` — título «FastPM vs UNIT DM matter
+cross-correlation». A grandes escalas r(k) ≈ 1; la caída a k altos es física
+(solver PM, resolución, evolución no lineal), no indica seeds distintas.
 
-## Campos en `summary.json` (modo DM)
+### Comparación trazadores
 
-Además de `median_r_k_low`, `verdict`, `n_grid`, etc.:
-
-```json
-{
-  "tracer": "dm",
-  "fastpm_dm": "/data21/.../snap_1.0000/1",
-  "unit_dm": "/data21/.../dm_particles_0.5_128.bz2",
-  "dm_mass_particle_msun_h": 1200000000.0,
-  "dm_batch_size": 5000000,
-  "fastpm_dm_mode": "DM+CIC",
-  "unit_dm_mode": "DM+CIC"
-}
-```
-
-Veredicto automático (igual que halos):
-
-- `compatible` si mediana r(k) ≥ 0,9 (k < umbral)
-- `incompatible` si ≤ 0,3
-- `inconclusive` en el intervalo intermedio
+| Trazador | mediana r(k), k < 0,05 | Veredicto ICs |
+| --- | ---: | --- |
+| Halos Rockstar (job 98402, 500k centrales) | 0,17 | Falso negativo |
+| Halos Rockstar (post-fix PID, sep) | ≈ 0,35 | Inconcluso |
+| **Partículas DM** | **1,000** | **ICs compatibles** |
 
 ---
 
-## Limitaciones y matices
+## Interpretación
 
-### Fichero UNIT por defecto
+1. **ICs confirmadas.** Los modos de gran escala (k < 0,05) están perfectamente
+   correlacionados → FastPM y UNIT comparten la misma realización de fases iniciales
+   (`fixedAmp_InvPhase_001`), coherente con la confirmación de Adrián (31 ago).
 
-`dm_particles_0.5_128.bz2` es el mismo snapshot que ya usa `slurm/density_field/main_density_field_cic.slurm` en desarrollo. Es **un fichero por snapshot** (índice 128 = a = 1), no el catálogo completo de 129 snapshots.
+2. **Caída a k altos es esperable.** A a = 1 el campo DM ya incluye crecimiento y
+   colapso no lineal; el solver PM de FastPM difiere del N-body de UNIT en escalas
+   pequeñas. Esto no invalida el matching halo a halo en el régimen de masas
+   resueltas.
 
-Si r(k) DM sigue bajo, alternativas a documentar en la siguiente iteración:
+3. **El bloqueo r(k) = 0,17 queda resuelto.** El diagnóstico correcto para ICs es
+   DM, no Rockstar. El matching 1-1 por proximidad puede retomarse.
 
-1. **Rejilla precomputada UNIT** `DM_DENS/dmdens_cic_128.dat` (2048³, formato Fortran unformatted de analysesim) — requeriría loader dedicado; no implementado en v1.
-2. **Todos los slabs de partículas** del snapshot 128 si existieran ficheros adicionales por subvolumen (no observado en el listado actual de `DM_PARTICLES`).
-
-### Coste computacional
-
-- FastPM BigFile: lectura por lotes; job Slurm 8 h con `n_grid=256` y batch 5M.
-- UNIT bz2: descompresión + `loadtxt` por lote; puede ser más lento que BigFile; monitorizar logs.
-
-### Evolución no lineal
-
-A **a = 1** el r(k) DM ya incluye crecimiento y virialización, no solo fases de ICs. Para ICs puras haría falta **z_ini** (p. ej. snapshot 0). El test a a = 1 es coherente con la comparación previa en halos Rockstar a z = 0 y con la pregunta «¿comparten la misma realización a z = 0?».
+4. **HMF y scatter M200b.** Las discrepancias UNIT vs FastPM N-body observadas el
+   6 sep (nota [`2026-09-06-halo-hmf-unit-fastpm-a1.md`](2026-09-06-halo-hmf-unit-fastpm-a1.md))
+   deben atribuirse a finder, definición de masa y resolución, no a seeds distintas.
 
 ---
 
-## Tests
+## Veredicto
 
-Nuevos tests en `src/tests/density_field/test_particle_io.py`:
-
-- `test_detect_bz2_text_file`
-- `test_bz2_batches_single_batch`
-- `test_bz2_batches_chunked`
+- **ICs compatibles (DM):** **SÍ**
+- **Evidencia:** mediana r(k) = **1,000** en k < 0,05 h/Mpc; n_grid = 256;
+  trazador `--tracer dm`
+- **ICs compatibles (halos):** NO (trazador inadecuado; no usar para este test)
+- **Siguiente paso:** matching posicional en subset; scatter M200b en pares;
+  informar a Adrián con figura DM
 
 ---
 
-## Criterio de éxito (pendiente run Taurus)
+## Artefactos
 
-| Criterio | Umbral |
+| Fichero | Descripción |
 | --- | --- |
-| Job Slurm DM | Termina sin error; `summary.json` con `"tracer": "dm"` |
-| r(k) a k bajos | mediana r(k) > **0,9** → ICs compatibles (criterio Adrián) |
-| Comparación halos vs DM | Si DM ≈ 1 y halos ≈ 0,3, el problema era trazador Rockstar; si ambos bajos, seeds distintas o convención de simulación |
+| `output/fastpm_unit_seed_check_dm/r_k.png` | Figura r(k) vs k |
+| `output/fastpm_unit_seed_check_dm/r_k.csv` | Tabla numérica |
+| `output/fastpm_unit_seed_check_dm/summary.json` | Metadatos + veredicto |
+| `output/fastpm_unit_ics_dm.out` / `.log` | Logs Slurm (si aplica) |
+
+---
+
+## Referencias de código
+
+```bash
+cd /home/arnes/santiago_arranz/density_field_properties
+source src/.venv/bin/activate
+export PYTHONPATH="${PWD}/src:${PYTHONPATH}"
+
+sbatch slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics_dm.slurm
+```
+
+```bash
+# Smoke local
+python scripts/verify_fastpm_unit_ics.py \
+    --tracer dm \
+    --n-grid 256 \
+    --dm-batch-size 5000000 \
+    --output-dir output/fastpm_unit_seed_check_dm
+```
 
 ---
 
 ## Siguientes pasos
 
-1. Lanzar `sbatch slurm/verify_fastpm_unit_ics/main_verify_fastpm_unit_ics_dm.slurm` en Taurus.
-2. Anotar mediana r(k) en esta nota y en el plan `2026-08-31-...`.
-3. Si r(k) DM > 0,9: escalar a Adrián con figura DM; mantener halos como contraste.
-4. Si r(k) DM bajo: revisar param files / seeds; valorar snapshot IC (z alto) o `dmdens_cic_128.dat`.
-5. Actualizar Notion «Verificar ICs» cuando exista resultado numérico.
-
----
-
-## Veredicto (plantilla — rellenar tras run)
-
-- **Run Slurm:** _pendiente_
-- **mediana r(k), k < 0.05 h/Mpc:** _pendiente_
-- **ICs compatibles (DM):** _pendiente_
-- **Artefactos:** `density_field_properties/output/fastpm_unit_seed_check_dm/`
+1. Compartir figura DM con Adrián (sustituye el veredicto negativo de halos).
+2. Implementar matching por proximidad (KD-tree, box periódico) en subset 5k–10k halos.
+3. Scatter M200b en pares emparejados → tarea HMF / `CALIBRATE_MASS`.
+4. Confirmar criterios Rockstar en `rockstar_pm` vs `rockstar_nbody` (Adrián/Manuel).

@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Fecha | 2026-09-06 |
-| Estado | primera ejecución completada; segunda en cola (criterio acotado) |
+| Estado | ambas ejecuciones completadas (jobs 99216, 99217) |
 | Repo producto | `density_field_properties` |
 | Repo notas | `phd-agents-toolkit` |
 | Script | `density_field_properties/scripts/compare_halo_hmf.py` |
@@ -108,9 +108,9 @@ Los `out_8.list` de FastPM **no tienen columna `PID`** en el header (55 columnas
 
 **Nota:** el header Rockstar de UNIT cita `m_p = 1.247×10⁹` M☉/h; usamos **1.2×10⁹** del config compartido FastPM–UNIT para homogeneizar el corte entre simulaciones.
 
-**Job Slurm:** `99217` (`halo_hmf_central`, enviado 2026-09-06).
+**Job Slurm:** `99217` (`halo_hmf_central`, completado 2026-09-06).
 
-**Artefactos esperados:**
+**Artefactos:**
 
 - `output/halo_hmf_a1_central_min20mp/hmf_comparison.png`
 - `output/halo_hmf_a1_central_min20mp/hmf_comparison.csv`
@@ -118,7 +118,35 @@ Los `out_8.list` de FastPM **no tienen columna `PID`** en el header (55 columnas
 
 ---
 
-## Interpretación esperada tras la ejecución 2
+## Ejecución 2 — resultados (completada)
+
+**Conteos tras filtros:**
+
+| Catálogo | n_halos |
+| --- | ---: |
+| UNIT (centrales) | 122 157 903 |
+| FastPM Rockstar N-body | 29 700 481 |
+| FastPM FoF | 15 537 030 |
+| FastPM Rockstar PM | 1 981 597 |
+
+**Ratios dn/dlog₁₀M UNIT / Rockstar N-body** en log₁₀ M ∈ [11.5, 13]:
+
+| log₁₀ M (centro bin) | Ratio |
+| --- | ---: |
+| 11.69 | 1.09 |
+| 11.91 | 0.86 |
+| 12.14 | 0.67 |
+| 12.36 | 0.54 |
+| 12.59 | 0.46 |
+| 12.81 | 0.41 |
+
+Mediana del ratio en el rango: **0.61** (media 0.67). Tras eliminar subhalos UNIT y aplicar corte 20 m_p, UNIT queda **por debajo** de N-body en log₁₀ M ≳ 12.1 (inversión respecto a la ejecución 1).
+
+**FoF vs N-body** con corte 20 m_p: ratios UNIT/FoF ≈ 1.0 en log₁₀ M ≈ 11.7; FoF y N-body más alineados que en la ejecución sin filtros.
+
+---
+
+## Interpretación (ambas ejecuciones)
 
 | Efecto que debería reducirse | Motivo |
 | --- | --- |
