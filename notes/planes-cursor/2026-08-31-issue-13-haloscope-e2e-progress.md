@@ -5,7 +5,7 @@
 | Fecha | 2026-08-31 |
 | Issue | [#13](https://github.com/computationalAstroUAM/density_field_properties/issues/13) — End-to-end Haloscope workflow tests (Rockstar T/|U| column) |
 | Repo de producto | `density_field_properties` |
-| Plan padre | [`2026-08-27-haloscope-taurus.md`](2026-08-27-haloscope-taurus.md) |
+| Plan padre | [`2026-09-17-haloscope-pipeline-implementacion.md`](2026-09-17-haloscope-pipeline-implementacion.md) (Fase 3) |
 | Estado | En progreso — smoke E2E local OK; producción Slurm pendiente |
 
 ---

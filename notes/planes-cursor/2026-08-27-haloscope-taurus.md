@@ -1,9 +1,15 @@
 # Plan Cursor: Haloscope FastPM — sesión Taurus
 
+> **Supersedido en decisiones de catálogo e ICs** por
+> [`2026-09-17-haloscope-phase0-decisions.md`](2026-09-17-haloscope-phase0-decisions.md) y el
+> plan maestro
+> [`2026-09-17-haloscope-pipeline-implementacion.md`](2026-09-17-haloscope-pipeline-implementacion.md).
+> Este documento conserva el detalle operativo de la sesión Taurus (agosto 2026).
+
 | Campo | Valor |
 | --- | --- |
 | Fecha | 2026-08-27 |
-| Estado | planificado (issue #13 en progreso — 2026-08-31) |
+| Estado | histórico — ver plan 2026-09-17 |
 | Entorno | Cluster Taurus (sesión interactiva + jobs ligeros) |
 | Repo de producto | `density_field_properties` |
 | Repo toolkit (notas) | `phd-agents-toolkit` |
