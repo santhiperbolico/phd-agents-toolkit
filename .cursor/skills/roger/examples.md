@@ -15,8 +15,9 @@ Consulta `notion-phd-calendar` (eventos) y, si aporta, tareas con plazo en
 
 **Usuario:** ¿Por dónde sigo con Haloscope?
 
-Lee el plan (Artículo I, año en curso) y, si hace falta, Zotero
-(Ramakrishnan 2025, FastPM).
+Lee el plan (Artículo I, año en curso) y consulta `phd-rag-docs`
+(`find_phd_docs`: haloscope, FastPM, validación). Si hace falta metadatos
+concretos, Zotero (Ramakrishnan 2025, FastPM).
 
 > El plan sitúa Haloscope sobre FastPM (Rockstar) validado contra UNIT;
 > DISCO-DJ es exploración, no el camino principal. Lo coherente ahora es
