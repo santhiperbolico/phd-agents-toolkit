@@ -3,7 +3,7 @@
 **Repository:** [density_field_properties](https://github.com/computationalAstroUAM/density_field_properties)
 **Plan:** [`notes/planes-cursor/2026-09-19-haloscope-repo-structure.md`](../../../notes/planes-cursor/2026-09-19-haloscope-repo-structure.md)
 **Pipeline funcional:** [`notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md`](../../../notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md)
-**Status:** S0–S2 completados (2026-09-20) — migración S3–S7 pendiente
+**Status:** S0–S2 completados; S6 parcial (2026-09-20) — `validation/assembly_bias_panel.py`, config JSON del pipeline
 **Last updated:** 2026-09-20
 
 ---
@@ -151,15 +151,31 @@ def predict_models(
 
 **Propósito:** métricas científicas y informes (Fase 4 del plan maestro).
 
-| Submódulo | Contenido |
-| --- | --- |
-| `holdout.py` | KS/MAE hold-out SIM |
-| `marginals.py` | Distribuciones marginales post-enrich |
-| `assembly_bias.py` | b₁(M), colas en entorno (Ramakrishnan Fig. 4) |
-| `clustering.py` | P(k), ξ(r) |
-| `report.py` | Agregación HTML/PDF |
+| Submódulo | Contenido | Estado |
+| --- | --- | --- |
+| `assembly_bias_panel.py` | PDF panel b₁(M) post-enrich; título según `input_features` | ✅ implementado |
+| `holdout.py` | KS/MAE hold-out SIM | pendiente |
+| `marginals.py` | Distribuciones marginales post-enrich | pendiente |
+| `assembly_bias.py` | b₁(M), colas en entorno (Ramakrishnan Fig. 4) | pendiente (helpers aún en `sim_to_fastpm/assembly_bias.py`) |
+| `clustering.py` | P(k), ξ(r) | pendiente |
+| `report.py` | Agregación HTML/PDF | pendiente |
 
-**Origen actual:** `sim_to_fastpm/assembly_bias.py`, `plotting.py` (parte científica), futuro `validation.py`.
+**API mínima (panel assembly bias, invocable sin re-ejecutar fit — R15):**
+
+```python
+def write_tidal_assembly_bias_panel(
+    halos_sim,
+    halos_fastpm_enriched,
+    repo_root,
+    output_dir,
+    input_features,
+    mass_column_fastpm="M200b",
+    assembly_bias_n_grid=128,
+) -> Path:
+    """Write assembly-bias PDF; title reflects Haloscope INPUT features."""
+```
+
+**Origen actual:** `sim_to_fastpm/assembly_bias.py` (helpers numéricos), `sim_to_fastpm/plotting.py` (parte científica). El pipeline **no** contiene lógica de assembly bias; la invoca desde `validation/`.
 
 ---
 
@@ -171,10 +187,21 @@ def predict_models(
 | --- | --- |
 | `run_environment_properties.py` | read_data → environment_properties |
 | `run_preprocessing.py` | read_data + environment_properties → preprocessing |
-| `run_haloscope_enrichment.py` | preprocessing → haloscope → Parquet enriquecido |
+| `run_haloscope_enrichment.py` | preprocessing → haloscope → Parquet enriquecido; opcional `validation` |
 | `run_validation.py` | validation (+ utils plotting) |
 
-**Config:** lee `config/haloscope_run.yaml` y overrides CLI (requisito F1.2 del plan maestro).
+**Orquestación Python (`src/density_field_properties/pipelines/`):**
+
+| Módulo | Responsabilidad |
+| --- | --- |
+| `config.py` | `HaloscopeEnrichmentConfig`, `load_haloscope_enrichment_config()` |
+| `haloscope_enrichment.py` | `run_haloscope_enrichment_pipeline(config)` |
+
+**Entrypoint CLI:** un único argumento `--config` apuntando a JSON (sin flags `--tidal-preset`, `--quick-run`, etc.). Presets en `config/haloscope_run_*.json`.
+
+**Shim legacy:** `haloscope/sim_to_fastpm/pipeline_tidal.py` delega en el pipeline canónico con configs tidal; se elimina en S7.
+
+**Eliminado:** `haloscope_enrichment_tidal.py`, `run_haloscope_enrichment_tidal.py` (sustituidos por JSON + pipeline único).
 
 ---
 
@@ -200,15 +227,68 @@ pipelines          → todas las capas anteriores
 
 ## 4. Configuración
 
-### 4.1 Ficheros YAML
+### 4.1 Ficheros de run (implementado vs objetivo)
 
-| Fichero | Contenido |
-| --- | --- |
-| `config/haloscope_run.yaml` | Run SIM→FastPM (existente) |
-| `config/environment_properties.yaml` | Grid CIC, paths DM, snapshot |
-| `config/paths_taurus.yaml` | Rutas cluster; **no** commitear secretos |
+| Fichero | Formato | Contenido | Estado |
+| --- | --- | --- | --- |
+| `config/haloscope_run.yaml` | YAML | Run SIM→FastPM producción (Fase 0) | existente |
+| `config/haloscope_run_env_smoke.json` | JSON | env, subset 8k halos | ✅ |
+| `config/haloscope_run_env_production.json` | JSON | env, catálogos completos | ✅ |
+| `config/haloscope_run_tidal_smoke.json` | JSON | tidal INPUT, subset | ✅ |
+| `config/haloscope_run_tidal_production.json` | JSON | tidal INPUT, producción | ✅ |
+| `config/haloscope_run_tidal_*_assembly_bias.json` | JSON | tidal + PDF assembly bias | ✅ |
+| `config/environment_properties.yaml` | YAML | Grid CIC, paths DM, snapshot | pendiente |
+| `config/paths_taurus.yaml` | YAML | Rutas cluster; **no** commitear secretos | pendiente |
 
-### 4.2 Claves obligatorias `haloscope_run.yaml`
+**Objetivo F1.2:** un loader YAML único; los JSON actuales son el contrato interino del pipeline de enrichment hasta unificar con `haloscope_run.yaml`.
+
+### 4.2 Esquema JSON `HaloscopeEnrichmentConfig`
+
+Loader: `load_haloscope_enrichment_config(path)` en `pipelines/config.py`.
+
+```json
+{
+  "run_name": "haloscope_env_smoke",
+  "paths": {
+    "sim_hlist": null,
+    "fastpm_list": null,
+    "repo_root": ".",
+    "output_dir": "output/sim_to_fastpm_haloscope"
+  },
+  "sample": {
+    "max_sim_halos": 8000,
+    "max_fastpm_halos": 8000,
+    "max_descriptor_batch_files": null
+  },
+  "haloscope": {
+    "input_features": ["env"],
+    "min_bin_size": 5,
+    "run_holdout_validation": true,
+    "enriched_parquet_name": "fastpm_out_8_haloscope_enriched.parquet"
+  },
+  "tidal": {
+    "n_grid": 512,
+    "unit_descriptors_dir": null,
+    "fastpm_descriptors_dir": null
+  },
+  "validation": {
+    "assembly_bias": {
+      "enabled": false,
+      "n_grid": 128
+    }
+  },
+  "collect_tables": false
+}
+```
+
+| Sección | Claves | Notas |
+| --- | --- | --- |
+| `paths.sim_hlist`, `paths.fastpm_list` | str \| null | `null` → defaults de `sim_to_fastpm/config.py` |
+| `sample.max_*` | int \| null | `null` → catálogo completo |
+| `haloscope.input_features` | list[str] | `env`, `t_over_u`, `tidal_anisotropy`, … |
+| `validation.assembly_bias.enabled` | bool | Si true, escribe PDF tras enrich |
+
+### 4.3 Claves obligatorias `haloscope_run.yaml` (objetivo unificado)
 
 Extiende el fichero actual; el loader debe validar:
 
@@ -224,7 +304,7 @@ Extiende el fichero actual; el loader debe validar:
 | `haloscope.env_radius_mpc_h` | float | Default 5 |
 | `output.dir` | str | Raíz artefactos run |
 
-**R4 — Single source of truth:** tras migración S2, no duplicar estos defaults en un `config.py` Python paralelo.
+**R4 — Single source of truth:** objetivo YAML único (F1.2). Interino: JSON de run en `config/haloscope_run_*.json` + defaults de cluster en `sim_to_fastpm/config.py` hasta unificar loaders.
 
 ---
 
@@ -305,7 +385,7 @@ Cada pipeline step escribe `manifest.json`:
 | **R12** | Tests unitarios por capa bajo `src/tests/<capa>/`. |
 | **R13** | Smoke integración con fixtures sintéticos sin Taurus (`@pytest.mark.integration` para E2E cluster). |
 | **R14** | Slurm jobs separados por capa (§7 plan). |
-| **R15** | `validation/assembly_bias.py` invocable sin re-ejecutar fit. |
+| **R15** | `validation/assembly_bias_panel.py` invocable sin re-ejecutar fit (helpers aún en `sim_to_fastpm/assembly_bias.py`). |
 | **R16** | Shims de import deprecados durante S3–S6; eliminados en S7. |
 | **R17** | Vendored `haloscope.py` excluido de black/isort (política actual). |
 | **R18** | Docstrings NumPy en inglés en código nuevo (convención repo). |
@@ -371,7 +451,7 @@ slurm/
 | F2.1 Bins log M | `haloscope/bins.py` |
 | F2.3 HMF gate | `utils/hmf/` + `preprocessing/mass_calibration.py` |
 | F3.1–F3.5 Tidal | `environment_properties/` + `preprocessing/environment_join.py` |
-| F4.1 Assembly bias | `validation/assembly_bias.py` |
+| F4.1 Assembly bias | `validation/assembly_bias_panel.py` (+ migrar helpers a `validation/assembly_bias.py`) |
 | F4.5 Informe | `validation/report.py` |
 
 ---
