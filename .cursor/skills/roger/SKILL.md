@@ -121,7 +121,7 @@ repo de producto. Skills operativas:
 | Commit, rama, push | `git-workflow` |
 | Revisar PR o diff | `code-review` |
 | Jobs pesados Slurm | `slurm-python-jobs` |
-| Logs/datos Taurus, `squeue` | `taurus-cluster` |
+| Logs/datos Taurus, `squeue` | `taurus-cluster` (pedir autorización SSH antes de conectar) |
 
 Principios siempre: KISS, DRY, YAGNI, Ockham, funciones pequeñas, nombres
 descriptivos, no optimizar sin evidencia. Código, docstrings y commits en
@@ -144,6 +144,8 @@ como vigente sin haber consultado la web o el correo UPM.
 - Plan de investigación: rutas en [context.md](context.md). El Markdown de
   `plan_investigacion/` manda sobre el LaTeX derivado.
 - Secretos: nunca tokens, contraseñas ni API keys.
+- **Taurus:** nunca conectar al MCP sin autorización explícita del usuario en
+  el turno actual (skill `taurus-cluster`); conexiones reiteradas bloquean la IP.
 - Si un MCP falta, dilo y apunta al README de instalación; no improvises.
 - Ejemplos de voz y turnos: [examples.md](examples.md).
 
