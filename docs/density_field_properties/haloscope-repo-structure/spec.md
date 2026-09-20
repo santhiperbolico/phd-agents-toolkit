@@ -3,7 +3,7 @@
 **Repository:** [density_field_properties](https://github.com/computationalAstroUAM/density_field_properties)
 **Plan:** [`notes/planes-cursor/2026-09-19-haloscope-repo-structure.md`](../../../notes/planes-cursor/2026-09-19-haloscope-repo-structure.md)
 **Pipeline funcional:** [`notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md`](../../../notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md)
-**Status:** S0–S4 completados; S6 parcial (2026-09-20) — `read_data/halos/`, `environment_properties/`, `validation/assembly_bias_panel.py`, config JSON del pipeline
+**Status:** S0–S5 completados; S6 parcial (2026-09-20) — `haloscope/{model,bins,training,predict}.py`, `read_data/halos/`, `environment_properties/`, `validation/assembly_bias_panel.py`
 **Last updated:** 2026-09-20
 
 ---
@@ -94,12 +94,12 @@ Esta spec define la **organización del código**, los **contratos de datos** en
 
 **Propósito:** modelo CMVG y operaciones fit/predict únicamente.
 
-| Submódulo | Contenido |
-| --- | --- |
-| `model.py` | `ConditionalMultiVariateGaussian` (vendored upstream) |
-| `training.py` | Fit por bin log M, hold-out interno opcional |
-| `predict.py` | Predicción por chunks / bins |
-| `bins.py` | Bordes de masa parametrizables (Ap. D Ramakrishnan) |
+| Submódulo | Contenido | Estado |
+| --- | --- | --- |
+| `model.py` | `ConditionalMultiVariateGaussian` (vendored upstream) | ✅ |
+| `training.py` | `fit_models`, hold-out interno opcional | ✅ |
+| `predict.py` | `predict_models`, `enrich_fastpm_catalog` | ✅ |
+| `bins.py` | Bordes de masa parametrizables (Ap. D Ramakrishnan) | ✅ |
 
 **API pública mínima:**
 
@@ -110,7 +110,6 @@ def fit_models(
     input_features,
     output_features,
     min_bin_size,
-    random_seed=None,
 ):
     """Return dict mapping bin index to fitted CMVG."""
 
@@ -118,10 +117,10 @@ def fit_models(
 def predict_models(
     models,
     target_table,
+    bin_edges,
     input_features,
     output_features,
     mass_column="M200b_cal",
-    random_seed=None,
 ):
     """Return table with predicted secondary properties."""
 ```

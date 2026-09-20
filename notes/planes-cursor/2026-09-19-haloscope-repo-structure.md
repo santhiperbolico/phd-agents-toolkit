@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Fecha | 2026-09-19 |
-| Estado | S0–S4 completados; S6 parcial (2026-09-20) — S5, S7 pendiente |
+| Estado | S0–S5 completados; S6 parcial (2026-09-20) — S7 pendiente |
 | Repo producto | `density_field_properties` |
 | Repo notas | `phd-agents-toolkit` |
 | Spec | [`docs/density_field_properties/haloscope-repo-structure/spec.md`](../../docs/density_field_properties/haloscope-repo-structure/spec.md) |
@@ -215,7 +215,7 @@ Migración **incremental** con shims de import deprecados un release.
 | S2 | Extraer `preprocessing/` (mass, env join, filters) | Medio | S1 | ✅ 2026-09-20 |
 | S3 | Renombrar `halo_catalog/` → `read_data/halos/` + shims | Medio | tests readers | ✅ 2026-09-20 |
 | S4 | Agrupar `environment_properties/` desde `density_field/` + tidal | Medio | Slurm CIC+tidal | ✅ 2026-09-20 |
-| S5 | Reducir `haloscope/` a model + training + predict | Bajo | S2 |
+| S5 | Reducir `haloscope/` a model + training + predict | Bajo | S2 | ✅ 2026-09-20 |
 | S6 | Crear `validation/` y `utils/`; retirar assembly bias de sim_to_fastpm | Bajo | Fase 4 | 🔄 parcial 2026-09-20 |
 | S7 | Eliminar shims y carpeta `sim_to_fastpm/` | Alto | S1–S6 + CI verde |
 
@@ -281,3 +281,4 @@ Migración **incremental** con shims de import deprecados un release.
 | 2026-09-20 | S6 parcial: `validation/assembly_bias_panel.py`, `HaloscopeEnrichmentConfig` + JSON presets; pipeline único; eliminados wrappers tidal deprecados |
 | 2026-09-20 | S3 completado (`read_data/halos/`, shims en `halo_catalog/`, tests en `tests/read_data/halos/`) |
 | 2026-09-20 | S4 completado (`environment_properties/` con cic, fourier, tidal_tensor, tidal_anisotropy; shims legacy; tests en `tests/environment_properties/`) |
+| 2026-09-20 | S5 completado (`haloscope/model.py`, `bins.py`, `training.py`, `predict.py`; API `fit_models`/`predict_models`; shims en `haloscope.py` y `sim_to_fastpm/training.py`) |
