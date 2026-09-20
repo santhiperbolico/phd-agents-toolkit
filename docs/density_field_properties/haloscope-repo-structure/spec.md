@@ -3,7 +3,7 @@
 **Repository:** [density_field_properties](https://github.com/computationalAstroUAM/density_field_properties)
 **Plan:** [`notes/planes-cursor/2026-09-19-haloscope-repo-structure.md`](../../../notes/planes-cursor/2026-09-19-haloscope-repo-structure.md)
 **Pipeline funcional:** [`notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md`](../../../notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md)
-**Status:** S0–S6 completados (2026-09-20) — `utils/{stats,plotting}`, `validation/{assembly_bias,plots,marginals,assembly_bias_panel}.py`; S7 pendiente (eliminar `sim_to_fastpm/`)
+**Status:** S0–S7 completados (2026-09-20) — `sim_to_fastpm/` y shims legacy eliminados; defaults en `pipelines/run_defaults.py`
 **Last updated:** 2026-09-20
 
 ---
@@ -459,25 +459,7 @@ slurm/
 
 ## 10. Migración y compatibilidad
 
-Durante S3–S6, el repo expone shims:
-
-```python
-# density_field_properties/halo_catalog/__init__.py (deprecado)
-import warnings
-from density_field_properties.read_data.halos.base import HaloCatalogData
-
-warnings.warn("halo_catalog is deprecated; use read_data.halos", DeprecationWarning)
-```
-
-**R16:** pytest emite warning test optional `test_no_deprecated_imports_in_new_code`.
-
-Al **S7**, eliminar:
-
-- `haloscope/sim_to_fastpm/`
-- `halo_catalog/` (si migrado)
-- `density_field/` como paquete top-level (contenido movido)
-- `halo_environment_descriptors/`
-- `tidal_tensor.py` en raíz de paquete
+**S7 completado (2026-09-20).** Eliminados `haloscope/sim_to_fastpm/`, `halo_catalog/`, `density_field/`, `halo_environment_descriptors/` y `tidal_tensor.py`. Defaults de cluster en `pipelines/run_defaults.py`; loaders en `preprocessing/catalog_loaders.py`; partículas DM en `read_data/particles/`.
 
 ---
 
