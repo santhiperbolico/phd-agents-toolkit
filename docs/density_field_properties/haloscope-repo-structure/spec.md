@@ -3,7 +3,7 @@
 **Repository:** [density_field_properties](https://github.com/computationalAstroUAM/density_field_properties)
 **Plan:** [`notes/planes-cursor/2026-09-19-haloscope-repo-structure.md`](../../../notes/planes-cursor/2026-09-19-haloscope-repo-structure.md)
 **Pipeline funcional:** [`notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md`](../../../notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md)
-**Status:** S0–S5 completados; S6 parcial (2026-09-20) — `haloscope/{model,bins,training,predict}.py`, `read_data/halos/`, `environment_properties/`, `validation/assembly_bias_panel.py`
+**Status:** S0–S6 completados (2026-09-20) — `utils/{stats,plotting}`, `validation/{assembly_bias,plots,marginals,assembly_bias_panel}.py`; S7 pendiente (eliminar `sim_to_fastpm/`)
 **Last updated:** 2026-09-20
 
 ---
@@ -135,12 +135,12 @@ def predict_models(
 
 **Propósito:** helpers reutilizables y visualización **no vinculante** al criterio de publicación.
 
-| Submódulo | Contenido |
-| --- | --- |
-| `hmf/` | dn/dlog M, ratios entre catálogos, figuras diagnóstico |
-| `plotting/` | Helpers matplotlib genéricos (corner, histogramas) |
-| `stats/` | KS, correlación, MAE (funciones puras) |
-| `paths/` | Resolución rutas relativas a `output/` y config |
+| Submódulo | Contenido | Estado |
+| --- | --- | --- |
+| `stats.py` | `central_68_scatter`, `bin_midpoints`, `confidence_intervals`, … | ✅ |
+| `plotting/` | `compare_2d_contours` | ✅ |
+| `hmf/` | dn/dlog M, ratios entre catálogos, figuras diagnóstico | pendiente |
+| `paths/` | Resolución rutas relativas a `output/` y config | pendiente |
 
 **Regla:** si una función define pass/fail del Artículo I, pertenece a `validation/`, no a `utils/`.
 
@@ -155,7 +155,9 @@ def predict_models(
 | `assembly_bias_panel.py` | PDF panel b₁(M) post-enrich; título según `input_features` | ✅ implementado |
 | `holdout.py` | KS/MAE hold-out SIM | pendiente |
 | `marginals.py` | Distribuciones marginales post-enrich | pendiente |
-| `assembly_bias.py` | b₁(M), colas en entorno (Ramakrishnan Fig. 4) | pendiente (helpers aún en `sim_to_fastpm/assembly_bias.py`) |
+| `assembly_bias.py` | b₁(M), colas en entorno (Ramakrishnan Fig. 4) | ✅ |
+| `plots.py` | Panel assembly bias Fig. 4 | ✅ |
+| `marginals.py` | Corner plots hold-out (`corner_plot_sim_validation`) | ✅ |
 | `clustering.py` | P(k), ξ(r) | pendiente |
 | `report.py` | Agregación HTML/PDF | pendiente |
 
