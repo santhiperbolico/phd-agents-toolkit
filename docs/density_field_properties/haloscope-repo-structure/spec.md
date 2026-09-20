@@ -3,7 +3,7 @@
 **Repository:** [density_field_properties](https://github.com/computationalAstroUAM/density_field_properties)
 **Plan:** [`notes/planes-cursor/2026-09-19-haloscope-repo-structure.md`](../../../notes/planes-cursor/2026-09-19-haloscope-repo-structure.md)
 **Pipeline funcional:** [`notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md`](../../../notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md)
-**Status:** S0–S2 completados; S6 parcial (2026-09-20) — `validation/assembly_bias_panel.py`, config JSON del pipeline
+**Status:** S0–S3 completados; S6 parcial (2026-09-20) — `read_data/halos/`, `validation/assembly_bias_panel.py`, config JSON del pipeline
 **Last updated:** 2026-09-20
 
 ---
