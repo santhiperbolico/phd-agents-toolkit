@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Fecha | 2026-09-19 |
-| Estado | S0–S1 completados — S2 pendiente |
+| Estado | S0–S2 completados — S3 pendiente |
 | Repo producto | `density_field_properties` |
 | Repo notas | `phd-agents-toolkit` |
 | Spec | [`docs/density_field_properties/haloscope-repo-structure/spec.md`](../../docs/density_field_properties/haloscope-repo-structure/spec.md) |
@@ -212,7 +212,7 @@ Migración **incremental** con shims de import deprecados un release.
 | --- | --- | --- | --- |
 | S0 | Aprobar spec + este plan | — | — | ✅ 2026-09-20 |
 | S1 | Crear `pipelines/` y mover orquestación desde `sim_to_fastpm/pipeline*.py` | Bajo | F1 smoke estable | ✅ 2026-09-20 |
-| S2 | Extraer `preprocessing/` (mass, env join, filters) | Medio | S1 |
+| S2 | Extraer `preprocessing/` (mass, env join, filters) | Medio | S1 | ✅ 2026-09-20 |
 | S3 | Renombrar `halo_catalog/` → `read_data/halos/` + shims | Medio | tests readers |
 | S4 | Agrupar `environment_properties/` desde `density_field/` + tidal | Medio | Slurm CIC+tidal |
 | S5 | Reducir `haloscope/` a model + training + predict | Bajo | S2 |
@@ -277,3 +277,4 @@ Migración **incremental** con shims de import deprecados un release.
 | --- | --- |
 | 2026-09-19 | Plan creado; spec asociada; sin refactor en repo producto |
 | 2026-09-20 | S0 aprobado por Santiago; S1 completado (`pipelines/`, shims en `sim_to_fastpm/pipeline*.py`) |
+| 2026-09-20 | S2 completado (`preprocessing/`, shims en mass_matching/environment/tidal_features) |

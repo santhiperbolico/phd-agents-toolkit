@@ -3,7 +3,7 @@
 **Repository:** [density_field_properties](https://github.com/computationalAstroUAM/density_field_properties)
 **Plan:** [`notes/planes-cursor/2026-09-19-haloscope-repo-structure.md`](../../../notes/planes-cursor/2026-09-19-haloscope-repo-structure.md)
 **Pipeline funcional:** [`notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md`](../../../notes/planes-cursor/2026-09-17-haloscope-pipeline-implementacion.md)
-**Status:** S0–S1 completados (2026-09-20) — migración S2–S7 pendiente
+**Status:** S0–S2 completados (2026-09-20) — migración S3–S7 pendiente
 **Last updated:** 2026-09-20
 
 ---
