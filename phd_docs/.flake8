@@ -1,0 +1,6 @@
+[flake8]
+select = E, W, F, C
+ignore = W503, E203
+max_complexity = 15
+max_line_length = 99
+exclude = .venv,venv,.git,__pycache__,build,dist

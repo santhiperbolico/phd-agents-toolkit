@@ -77,3 +77,6 @@ htmlcov/
 
 # Local secrets
 .env
+
+# Local phd-docs overrides
+docs/phd_docs.local.json

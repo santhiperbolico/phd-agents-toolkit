@@ -4,13 +4,20 @@ VENV := $(PREFIX)/share/phd-agents-mcp/venv
 CURSOR_SKILLS := $(HOME)/.cursor/skills
 CURSOR_HELPERS := /usr/share/cursor/resources/app/resources/helpers
 MCP_PATH := $(PREFIX)/bin:$(CURSOR_HELPERS):/usr/bin:/bin
+CLAUDIA_DOCS_PATH ?= $(HOME)/Trabajo/repositorios/claudia_devenv/claudia_docs
+PHD_TOOLKIT_ROOT ?= $(CURDIR)
+PHD_DOCS_HOME ?= $(HOME)/.phd-docs
 
-.PHONY: help install-mcp install-zotero uninstall-mcp
+.PHONY: help install-mcp install-zotero install-phd-docs sync-phd-docs uninstall-mcp uninstall-phd-docs test-phd-docs
 
 help:
-	@echo "install-mcp     Install Overleaf/Taurus/UPM-mail/Slack-session CLIs and their Cursor skills"
-	@echo "install-zotero  Install zotero-mcp (PyPI) and the zotero-phd skill"
-	@echo "uninstall-mcp   Remove CLIs, skill links, and the shared venv"
+	@echo "install-mcp       Install Overleaf/Taurus/UPM-mail/Slack-session CLIs and skills"
+	@echo "install-zotero    Install zotero-mcp (PyPI) and the zotero-phd skill"
+	@echo "install-phd-docs  Install phd-docs RAG CLI, MCP, and phd-rag-docs skill"
+	@echo "sync-phd-docs     Re-index notes/, docs/, and Zotero PDFs"
+	@echo "test-phd-docs     Run phd-docs unit tests"
+	@echo "uninstall-mcp     Remove MCP CLIs, skill links, and the shared venv"
+	@echo "uninstall-phd-docs Remove phd-docs CLI, MCP link, and skill link"
 
 $(VENV)/bin/python:
 	$(PYTHON) -m venv $(VENV)
@@ -54,7 +61,34 @@ install-zotero: $(VENV)/bin/python
 	@echo "Keep Zotero desktop open (local API on 127.0.0.1:23119)."
 	@echo "Merge mcp/zotero/mcp.json.example into ~/.cursor/mcp.json then reload Cursor."
 
+install-phd-docs: $(VENV)/bin/python
+	mkdir -p $(PREFIX)/bin $(CURSOR_SKILLS)
+	$(VENV)/bin/pip install -e "$(CLAUDIA_DOCS_PATH)" -e "$(CURDIR)/phd_docs[pdf,dev]"
+	ln -sfn $(VENV)/bin/phd-docs $(PREFIX)/bin/phd-docs
+	ln -sfn $(VENV)/bin/phd-docs-mcp $(PREFIX)/bin/phd-docs-mcp
+	ln -sfn $(CURDIR)/mcp/phd-docs/skill $(CURSOR_SKILLS)/phd-rag-docs
+	@echo
+	@echo "Installed:"
+	@echo "  $(PREFIX)/bin/phd-docs"
+	@echo "  $(PREFIX)/bin/phd-docs-mcp"
+	@echo "  $(CURSOR_SKILLS)/phd-rag-docs"
+	@echo
+	@echo "Merge mcp/phd-docs/mcp.json.example into ~/.cursor/mcp.json then reload Cursor."
+	@echo "Then run: make sync-phd-docs"
+
+sync-phd-docs:
+	PHD_TOOLKIT_ROOT="$(PHD_TOOLKIT_ROOT)" PHD_DOCS_HOME="$(PHD_DOCS_HOME)" \
+		PHD_DOCS_EMBEDDING_DEVICE=cpu \
+		$(VENV)/bin/phd-docs sync
+
+test-phd-docs: install-phd-docs
+	cd phd_docs && $(VENV)/bin/python -m pytest
+
 uninstall-mcp:
 	rm -f $(PREFIX)/bin/overleaf-tools $(PREFIX)/bin/taurus-tools $(PREFIX)/bin/upm-mail-tools $(PREFIX)/bin/slack-session-tools $(PREFIX)/bin/zotero-mcp
 	rm -f $(CURSOR_SKILLS)/overleaf-mcp $(CURSOR_SKILLS)/taurus-cluster $(CURSOR_SKILLS)/upm-mail $(CURSOR_SKILLS)/slack-session $(CURSOR_SKILLS)/zotero-phd
 	rm -rf $(PREFIX)/share/phd-agents-mcp
+
+uninstall-phd-docs:
+	rm -f $(PREFIX)/bin/phd-docs $(PREFIX)/bin/phd-docs-mcp
+	rm -f $(CURSOR_SKILLS)/phd-rag-docs
