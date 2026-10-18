@@ -52,6 +52,18 @@ Slurm. El índice **n** identifica el snapshot SAM de los P_gg de Olivia. El
 pipeline FastPM usa catálogos fnl=0 en `fof_0.5000/LL-0.200` (independiente de
 n; el matching es por tracer + z).
 
+### Extrema de masa de halo (catálogo FastPM FoF)
+
+En el ensemble fnl=0 (`fof_0.5000/LL-0.200`), los halos del catálogo abarcan:
+
+| Extremo | Valor | Aprox. |
+| --- | --- | --- |
+| Máximo | `1181857100679067.0` | 1.18×10¹⁵ |
+| Mínimo | `147623265426.63123` | 1.48×10¹¹ |
+
+Referencia para acotar búsquedas de `mass_cut` y contrastar `halos_min` /
+`halos_max` en JSON de matching (`match_bins`, lower mass cut, etc.).
+
 ## Metodología elegida
 
 ### Por qué augmentación sintética (no matched por masa)
@@ -523,6 +535,8 @@ Resumen alineado con Fase 0 (ver tareas 0.1–0.11 para detalle):
   cualquier batch Slurm; fix `ngal`, manifest utils, plot validación, configs.
 - **2026-09-14:** Fase 0 implementada; descartados errorbars SAM (`err`), `--dry-run`
   y gate `validation_status.json` / `--require-validation-passed`.
+- **2026-09-26:** Extrema de masa de halo del catálogo FastPM FoF fnl=0 documentados
+  (máx. `1.18×10¹⁵`, mín. `1.48×10¹¹`).
 
 ## Resultado
 

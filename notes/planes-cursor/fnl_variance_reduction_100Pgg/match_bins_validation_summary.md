@@ -6,6 +6,12 @@ y `pk_comparison` en `match_bins_power_spectrum/`.
 
 La reducción de varianza R(k) solo es interpretable para casos válidos.
 
+**Catálogo FastPM FoF (fnl=0):** masa de halo máxima
+`1181857100679067.0` (≈ 1.18×10¹⁵), mínima `147623265426.63123`
+(≈ 1.48×10¹¹). Detalle en
+[2026-09-14-rk-property-pgg-plan.md](./2026-09-14-rk-property-pgg-plan.md)
+(sección «Extrema de masa de halo»).
+
 **Total:** 96 casos — **34 válidos**, **62 no válidos**.
 
 ### Casos reclasificados a no válidos tras revisión manual (13)

@@ -30,3 +30,9 @@ En cada fichero, enlaza al issue de GitHub cuando exista y, si aplica, anota el 
 | Repo | Documento |
 | --- | --- |
 | `density_field_properties` | [Rockstar `find_parents` (host halos / PID)](density_field_properties/rockstar-find-parents/find_parents.md) |
+### density_field_properties (ejemplos recientes)
+
+| Tarea | Spec | Plan |
+| --- | --- | --- |
+| Calibración de masa LR (Haloscope / Forero) | [mass-calibration-haloscope/spec.md](./density_field_properties/mass-calibration-haloscope/spec.md) | [implementation-plan.md](./density_field_properties/mass-calibration-haloscope/implementation-plan.md) |
+| Haloscope SIM → FastPM | [issue-6-sim-to-fastpm-haloscope/analysis.md](./density_field_properties/issue-6-sim-to-fastpm-haloscope/analysis.md) | — |
