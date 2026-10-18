@@ -1,0 +1,18 @@
+[
+    {
+        "provider": "LocalFolder",
+        "path": "notes",
+        "include": ["**/*.md"],
+        "exclude": ["**/_templates/**"]
+    },
+    {
+        "provider": "LocalFolder",
+        "path": "docs",
+        "include": ["**/*.md"]
+    },
+    {
+        "provider": "Zotero",
+        "data_dir": "/home/santhiperbolico/Zotero",
+        "include": ["metadata", "abstract", "pdf", "notes", "annotations"]
+    }
+]
