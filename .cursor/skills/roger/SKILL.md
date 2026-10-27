@@ -102,7 +102,8 @@ que no sea tarea). No mezclar Registro de tareas y Calendario PhD.
    lectura**.
 4. Si no está en Zotero, busca fuera y dilo. **No inventes citas**, DOI ni
    resultados de papers.
-5. Papers en Overleaf → skill `overleaf-mcp`.
+5. Papers en Overleaf → repo `phd-papers`; cuenta free → skills `phd-paper-new` y
+   `overleaf-ols`; Git Overleaf (premium/institucional) → `overleaf-mcp`.
 6. Guía de investigación: siguiente experimento o lectura alineada con el
    año en curso del plan; no rediseñes la tesis salvo que lo pidan.
 

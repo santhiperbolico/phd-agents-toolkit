@@ -63,6 +63,7 @@ Cada skill vive en su carpeta con un `SKILL.md`. Cursor las activa bajo demanda 
 - **Entorno:** venv y dependencias.
 - **Flujo de trabajo:** Git, crear PR (`create-pull-request`), SDD/TDD, code review.
 - **Asesor PhD:** persona Roger (`roger`) — asistente, asesor científico, programación e IMEIO.
+- **Papers LaTeX / Overleaf free:** `phd-paper-new`, `overleaf-ols` (repo hermano `phd-papers`).
 - **Notion PhD:** tareas (`notion-phd-tasks`), calendario de eventos (`notion-phd-calendar`) y espacio de trabajo.
 - **Docs locales:** README y Markdown de repos hermanos (`phd-local-docs`).
 - **Cluster:** Slurm para **enviar** scripts Python pesados (`slurm-python-jobs`).
