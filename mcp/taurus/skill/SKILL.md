@@ -4,11 +4,21 @@ description: >-
   Inspecciona ficheros, logs y datos en el cluster Taurus y consulta la cola
   Slurm del usuario con el MCP taurus (solo lectura, vía SSH). Usar cuando el
   usuario hable de Taurus, logs remotos, squeue, jobs en el cluster o leer
-  datos en taurus.ft.uam.es desde el portátil. Requiere autorización explícita
-  del usuario antes de cada conexión SSH.
+  datos en taurus.ft.uam.es desde el portátil. Nunca consultar Taurus sin
+  pedir permiso antes o sin orden explícita del usuario en el turno actual.
 ---
 
 # Taurus cluster (MCP)
+
+## Directriz principal
+
+**Nunca lances consultas a Taurus** (MCP `user-taurus`, `ssh` al cluster para
+leer ficheros o cola) **sin preguntar al usuario antes o sin que te lo haya
+dicho explícitamente** en el mensaje actual.
+
+Si crees que hace falta conectar: detente, propón qué harías (ruta, tool,
+número de conexiones SSH) y espera confirmación. Detalle → sección
+«Autorización obligatoria» y regla `taurus-ask-before-query`.
 
 ## Cuándo usar
 

@@ -1,0 +1,31 @@
+---
+description: Preguntar siempre antes de consultar Taurus vía MCP o SSH salvo petición explícita
+alwaysApply: true
+---
+
+# Taurus — preguntar antes de consultar
+
+## Regla
+
+**No lances consultas a Taurus** (tools del MCP `user-taurus`: `list_dir`,
+`read_file`, `find_files`, `grep_files`, `squeue_me`; ni `ssh` al cluster para
+inspeccionar ficheros o cola) **salvo que el usuario lo pida de forma explícita**
+en el mismo mensaje o **haya autorizado antes** tras tu pregunta en ese turno.
+
+Cada llamada al MCP abre SSH; conexiones reiteradas pueden bloquear la IP.
+
+## Qué cuenta como permiso explícito
+
+- Sí: «mira el log en Taurus», «haz squeue en el cluster», «lee
+  `…/slurm-123.out` en Taurus», «conecta a Taurus y…», «sí / adelante /
+  autorizado» tras proponer la consulta.
+- No: tareas locales («arregla el script», «¿por qué falló el job?») — aunque
+  la respuesta parezca requerir Taurus, **propón la consulta y pregunta antes**.
+
+## Sin permiso explícito, sí puedes
+
+- Trabajar en código, tests y docs locales del repo.
+- Preparar comandos `sbatch` o rutas remotas para que el usuario los ejecute
+  (envío de jobs → skill `slurm-python-jobs`, con sus propias confirmaciones).
+
+Detalle de flujo y minimizar conexiones → skill `taurus-cluster`.
