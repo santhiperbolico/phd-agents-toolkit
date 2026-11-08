@@ -17,6 +17,8 @@ description: >-
 
 ## Cuándo NO usar
 
+- Cuenta Overleaf **gratuita** sin Git → skill **`overleaf-ols`** y repo
+  `phd-papers` (`papers/<slug>/`).
 - El `.tex` está en un repo git local del workspace: editar esos ficheros, no Overleaf.
 - Compilar PDF, gestionar la cuenta Overleaf o generar tokens.
 - El servidor MCP `overleaf` no está conectado: indicar al usuario el README de `mcp/overleaf/`.
@@ -36,7 +38,7 @@ description: >-
 - Rutas relativas al raíz del proyecto; nunca `..` ni rutas absolutas.
 - Solo texto UTF-8; no reescribir binarios (figuras, PDF).
 - `write_file` sobrescribe el fichero entero: leer antes, cambiar lo mínimo, devolver el contenido completo.
-- Overleaf Git es una feature de pago/institucional; si las tools fallan por autenticación o «repository not found», decirlo y no improvisar APIs no oficiales.
+- Overleaf Git es una feature de pago/institucional; si las tools fallan por autenticación o «repository not found», usar **`overleaf-ols`** o decirlo y no improvisar APIs no oficiales.
 
 ## Salida esperada
 

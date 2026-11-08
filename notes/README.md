@@ -16,6 +16,7 @@ Carpeta central para **notas personales de doctorado**: reuniones, investigació
 notes/
   README.md                 # este fichero
   _templates/               # plantillas al crear una nota nueva
+  papers/                   # revisiones y fichas de artículos (ver papers/README.md)
   analisis/                 # análisis de datos, papers, hipótesis
   reportes/                 # informes listos para compartir (tutor, grupo, paper)
   reuniones/                # actas y seguimiento de reuniones
@@ -33,6 +34,7 @@ Usa **slug en minúsculas**, sin espacios, separado por guiones:
 | Reporte | `YYYY-MM-DD-<tema>.md` | `2026-03-15-resultados-matching.md` |
 | Análisis | `YYYY-MM-DD-<tema>.md` o `<tema>.md` si es iterativo | `fastpm-halos-analisis.md` |
 | Nota | `YYYY-MM-DD-<tema>.md` o `<tema>.md` | `lectura-springel-2005.md` |
+| Paper | `YYYY-MM-DD-<slug>.md` en `papers/` | `2026-10-09-lonergan-normalizing-flows-subhalos.md` |
 | Plan Cursor | `YYYY-MM-DD-<tema>.md` | `2026-08-24-issue-5-catalogos.md` |
 
 Copia la plantilla desde `_templates/` al crear un fichero nuevo.

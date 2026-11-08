@@ -2,7 +2,7 @@
 
 **Propósito:** toolkit compartido de reglas y skills para Vibecoding con Cursor en **proyectos de doctorado** (investigación, análisis, simulaciones, pipelines de datos). No es un repo de producto.
 
-**Última revisión:** 2026-08-24.
+**Última revisión:** 2026-11-03.
 
 ---
 
@@ -63,6 +63,7 @@ Cada skill vive en su carpeta con un `SKILL.md`. Cursor las activa bajo demanda 
 - **Entorno:** venv y dependencias.
 - **Flujo de trabajo:** Git, crear PR (`create-pull-request`), SDD/TDD, code review.
 - **Asesor PhD:** persona Roger (`roger`) — asistente, asesor científico, programación e IMEIO.
+- **Papers LaTeX / Overleaf free:** `phd-paper-new`, `overleaf-ols` (repo hermano `phd-papers`).
 - **Notion PhD:** tareas (`notion-phd-tasks`), calendario de eventos (`notion-phd-calendar`) y espacio de trabajo.
 - **Docs locales:** README y Markdown de repos hermanos (`phd-local-docs`).
 - **Cluster:** Slurm para **enviar** scripts Python pesados (`slurm-python-jobs`).
@@ -79,6 +80,10 @@ Overleaf, Taurus, correo UPM y Slack session: `make install-mcp` (CLIs en
 `~/.local/bin` y skills en `~/.cursor/skills/`). Zotero: `make install-zotero`.
 Configuración: [mcp/mcp.json.example](../mcp/mcp.json.example).
 
+**Taurus:** no consultar el cluster (MCP ni SSH de lectura) sin permiso explícito
+del usuario o confirmación tras preguntar — regla `taurus-ask-before-query`, skill
+`taurus-cluster`.
+
 ---
 
 ## Principios para agentes
@@ -90,6 +95,8 @@ Configuración: [mcp/mcp.json.example](../mcp/mcp.json.example).
 5. **Código mergeable:** tras cambios Python, pasar pre-commit/linters en ficheros tocados.
 6. **Venv y pip:** no ejecutar creación de `.venv` ni `pip install` en el terminal del agente; comprobar si existe y **dar los comandos al usuario** (skill `venv-and-deps`).
 7. **Idioma:** responder en castellano; escribir código y commits en inglés.
+8. **Taurus:** nunca lanzar consultas remotas al cluster sin que el usuario lo
+   pida explícitamente o confirme tras tu pregunta (regla `taurus-ask-before-query`).
 
 ---
 

@@ -1,0 +1,8 @@
+*** Run find parents:
+**** Ejecutable:
+/home/adrian/UNIT_PNG/rockstar_old/rockstar/util/find_parents
+**** nohup ./find_parents halos_0.0.ascii  BoxSize  >& halosp_0.0.ascii &
+**** ./find_parents out_AAA.list BoxSize > /outp_AAA.list
+If running multiple snapshots, ROCKSTAR also produces a pruned version of the halo catalogues, named out_AAA.list (i.e. ROCKSTAR looks in the following snapshot if that halo still exists and it is not a spurious structure) In that case, you may want to use the above
+***** Ejemplo concreto (Check: ps -p 3811207)
+nohup /home/adrian/UNIT_PNG/rockstar_old/rockstar/util/find_parents /data8/adrian/MN5/SEP_UNI/N2048_L250_fid/ROCKSTAR/outputs/out_87.list 250 >& /data21/users/vgonzalez/Data/Rockstar/SU1/outp_87.list &

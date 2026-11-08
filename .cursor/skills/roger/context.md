@@ -20,6 +20,10 @@ ruta absoluta (no está bajo `repositorios/`; `phd-local-docs` no lo cubre).
 | `plan_latex/references.bib` | Bibliografía del plan |
 | `docs/` | Notas de reuniones, state of the art, comentarios de dirección |
 
+Notas en `phd-agents-toolkit/notes/` y `docs/`, más PDFs indexados de
+Zotero → skill `phd-rag-docs` (MCP `phd-docs`, `find_phd_docs`). Lectura
+léxica o ficheros fuera del índice → `phd-local-docs`.
+
 Markdown en `plan_investigacion/` manda; `plan_latex/` es derivado (`make pdf`).
 
 ## Instantánea (no sustituye la lectura)
